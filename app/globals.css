@@ -6,6 +6,9 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --card-bg-start: 255, 255, 255;
+  --card-bg-end: 214, 219, 220;
+  --card-text: 0, 0, 0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -13,6 +16,9 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
+    --card-bg-start: 0, 0, 0;
+    --card-bg-end: 55, 55, 55;
+    --card-text: 255, 255, 255;
   }
 }
 
@@ -78,5 +84,9 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .card {
+    background: linear-gradient(to bottom right, rgb(var(--card-bg-start)), rgb(var(--card-bg-end)));
+    color: rgb(var(--card-text));
   }
 }
