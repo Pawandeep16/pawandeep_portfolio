@@ -30,7 +30,7 @@ const skills = [
 
 export function Skills() {
   return (
-    <section className="container mx-auto px-4">
+    <section id="skills" className="container mx-auto px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -43,7 +43,7 @@ export function Skills() {
         </p>
       </motion.div>
 
-      <div className="flex overflow-x-auto space-x-8 pb-4">
+      <div className="flex overflow-x-auto  overflow-y-hidden space-x-8 pb-4">
         {skills.map((skill, index) => (
           <motion.div
             key={skill.title}
@@ -51,7 +51,7 @@ export function Skills() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.2, duration: 0.5 }}
-            className="min-w-[300px] relative shadow-lg rounded-xl p-6 overflow-hidden transform transition-transform duration-300 hover:scale-105 card"
+            className="min-w-[400px] relative shadow-lg rounded-xl p-6 overflow-hidden transform transition-transform duration-300 hover:scale-105 card"
           >
             {/* Reflective Effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent blur-xl opacity-20 -z-10" />

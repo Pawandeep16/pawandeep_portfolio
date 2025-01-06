@@ -7,9 +7,11 @@ import { Typewriter } from "@/components/typewriter"
 import { useRouter } from "next/navigation"
 import { Skills } from "@/components/sections/skills"
 import { Projects } from "@/components/sections/projects"
-import {Contact} from "@/components/sections/contact"
 import { Testimonials } from "@/components/sections/testimonials"
-
+import { Gallery } from "@/components/sections/gallary"
+import Image from "next/image"
+import { Contact } from "@/components/sections/contact"
+import { scrollToSection } from "@/components/header"
 export default function Home() {
   const router = useRouter()
 
@@ -17,7 +19,20 @@ export default function Home() {
     <main className="min-h-screen">
       {/* Hero Section */}
       <section id="home" className="min-h-screen flex items-center justify-center relative">
-        <div className="container mx-auto px-4 pt-20">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://pawandeep-portfolio.web.app/Assests/pawan.png"
+            alt="Background"
+          width={920}
+          height={1520}
+          
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+        </div>
+
+        <div className="container mx-auto px-4 pt-20 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -60,7 +75,7 @@ export default function Home() {
               <Button 
                 size="lg" 
                 variant="outline"
-                onClick={() => router.push('/contact')}
+                onClick={() => scrollToSection('contact')}
               >
                 Contact Me
               </Button>
@@ -71,13 +86,13 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="absolute bottom-10 left-1/2 -translate-x-1/2"
+            className="absolute mt-10   left-1/2 -translate-x-1/2"
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
             >
-              <ArrowDown className="w-6 h-6" />
+              <ArrowDown className="w-6 h-6 cursor-pointer " onClick={() => scrollToSection('skills')} />
             </motion.div>
           </motion.div>
         </div>
@@ -86,6 +101,7 @@ export default function Home() {
       {/* Other Sections */}
       <Skills />
       <Projects />
+      <Gallery />
       <Testimonials />
       <Contact/>
     </main>

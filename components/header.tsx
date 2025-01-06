@@ -5,7 +5,20 @@ import { Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 
+
+export const  scrollToSection = (sectionId: string) => {
+  const element = document.getElementById(sectionId)
+  if (element) {
+    element.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    })
+  }
+}
+
 export function Header() {
+  
+
   return (
     <motion.header 
       initial={{ y: -100 }}
@@ -19,21 +32,21 @@ export function Header() {
           transition={{ delay: 0.2 }}
           className="text-2xl font-bold"
         >
-          Portfolio
+          Pawandeep
         </motion.div>
         
         <nav className="hidden md:flex items-center space-x-8">
           {["Home", "Skills", "Projects", "Gallery", "Testimonials", "Contact"].map((item, i) => (
-            <motion.a
+            <motion.button
               key={item}
-              href={`#${item.toLowerCase()}`}
+              onClick={() => scrollToSection(item.toLowerCase())}
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 * i }}
               className="text-foreground/80 hover:text-foreground transition-colors"
             >
               {item}
-            </motion.a>
+            </motion.button>
           ))}
         </nav>
 

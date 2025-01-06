@@ -5,7 +5,7 @@ import { ContactForm } from "@/components/contact-form"
 
 export function Contact() {
   return (
-    <section className="min-h-screen pt-20 flex items-center">
+    <section id="contact" className="min-h-screen pt-20 flex items-center">
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
           <motion.div
