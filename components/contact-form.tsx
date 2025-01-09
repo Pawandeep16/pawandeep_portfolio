@@ -16,8 +16,8 @@ export function ContactForm() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-md w-full">
-        <div>
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-7xl xl:w-[600px] md:w-[500px]  ">
+        
           <Input
             type="text"
             name="name"
@@ -25,8 +25,8 @@ export function ContactForm() {
             required
             className="w-full"
           />
-        </div>
-        <div>
+        
+        
           <Input
             type="email"
             name="email"
@@ -34,15 +34,15 @@ export function ContactForm() {
             required
             className="w-full"
           />
-        </div>
-        <div>
+        
+        
           <Textarea
             name="message"
             placeholder="Your Message"
             required
             className="min-h-[150px] w-full"
           />
-        </div>
+        
         <Button
           type="submit"
           className="w-full"

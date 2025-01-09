@@ -30,7 +30,7 @@ const skills = [
 
 export function Skills() {
   return (
-    <section id="skills" className="container mx-auto px-4">
+    <section id="skills" className="container  flex  flex-col mx-auto px-4 py-20 h-screen justify-center align-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

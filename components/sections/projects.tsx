@@ -7,11 +7,11 @@ import { ExternalLink, Github } from "lucide-react"
 
 const projects = [
   {
-    title: "E-commerce Platform",
+    title: "Covid-19 Tracker",
     description: "A full-stack e-commerce solution with real-time inventory management.",
-    image: "https://images.unsplash.com/photo-1557821552-17105176677c?w=800&h=600&fit=crop",
+    image: "https://cdn.leonardo.ai/users/46b1b318-d8a6-4668-9037-68754ff6aa5f/generations/68bf48ce-c506-4604-98fc-408a76020c05/Leonardo_Phoenix_09_Create_a_vibrant_and_informative_thumbnail_3.jpg",
     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma"],
-    liveUrl: "#",
+    liveUrl: "https://tracker-6f237.web.app/",
     githubUrl: "#"
   },
   {
