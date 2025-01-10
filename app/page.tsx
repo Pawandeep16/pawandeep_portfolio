@@ -29,7 +29,7 @@ export default function Home() {
   const router = useRouter()
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen ">
       {/* Hero Section */}
       <section id="home" className="min-h-screen flex items-center justify-center relative">
   <div className="absolute inset-0 z-0">
@@ -41,7 +41,7 @@ export default function Home() {
              (max-width: 1024px) 100vw, 
              100vw"
        fill
-      className="object-cover sm:object-left md:object-right lg:w-[800px!important] xl:object-cover xl:w-[900px!important] xl:h-[900px!important]"
+      className=" object-cover md:object-right lg:w-[800px!important] xl:object-cover xl:w-[900px!important] xl:h-[900px!important]"
       priority
     />
      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/80 to-background" />

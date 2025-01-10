@@ -17,19 +17,28 @@ const projects = [
   {
     title: "Portfolio Website",
     description: "A modern portfolio website with dark mode and animations.",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
+    image: "https://static.vecteezy.com/system/resources/previews/011/537/749/non_2x/people-work-portfolio-concept-for-website-template-landing-homepage-with-modern-isometric-flat-free-vector.jpg",
     tags: ["React", "Framer Motion", "Tailwind CSS"],
     liveUrl: "#",
     githubUrl: "#"
   },
   {
-    title: "Task Management App",
+    title: "Netfix Clone ",
     description: "A collaborative task management application with real-time updates.",
-    image: "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=800&h=600&fit=crop",
+    image: "https://images.ctfassets.net/y2ske730sjqp/1aONibCke6niZhgPxuiilC/2c401b05a07288746ddf3bd3943fbc76/BrandAssets_Logos_01-Wordmark.jpg?w=940",
     tags: ["React", "Node.js", "MongoDB", "Socket.io"],
-    liveUrl: "#",
+    liveUrl: "https://netflix-34510.web.app/",
+    githubUrl: "#"
+  },
+  {
+    title: "Amazon Clone ",
+    description: "A Full Stack Application which is the Replica of the Amazon.",
+    image: "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=800&h=600&fit=crop",
+    tags: ["React", "Node.js", "Firebase", "Socket.io","Ant Icons "],
+    liveUrl: "https://amazoon-1325.web.app/",
     githubUrl: "#"
   }
+
 ]
 
 export function Projects() {
