@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 import { Skills } from "@/components/sections/skills"
 import { Projects } from "@/components/sections/projects"
 import { Testimonials } from "@/components/sections/testimonials"
-import { Gallery } from "@/components/sections/gallary"
+import { Gallery } from "@/components/sections/gallery"
 import Image from "next/image"
 import { Contact } from "@/components/sections/contact"
 

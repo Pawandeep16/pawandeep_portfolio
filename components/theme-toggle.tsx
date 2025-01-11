@@ -11,12 +11,12 @@ export function ThemeToggle() {
 
   const sunSpring = useSpring({
     transform: theme === "light" ? "rotate(0deg) scale(1)" : "rotate(90deg) scale(0)",
-    config: { tension: 210, friction: 20 },
+    config: { tension: 100, friction: 10 },
   })
 
   const moonSpring = useSpring({
     transform: theme === "light" ? "rotate(90deg) scale(0)" : "rotate(0deg) scale(1)",
-    config: { tension: 210, friction: 20 },
+    config: { tension: 100, friction: 10 },
   })
 
   return (

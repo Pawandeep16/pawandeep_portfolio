@@ -8,9 +8,9 @@ interface EmailData {
 
 export async function sendEmail(form: HTMLFormElement) {
   return emailjs.sendForm(
-    'YOUR_SERVICE_ID',
-    'YOUR_TEMPLATE_ID',
+    'service_l1r912o',
+    'template_9uepqru',
     form,
-    'YOUR_PUBLIC_KEY'
+    'user_6xnkAOnakPLCYPRAVZ4zR'
   )
 }

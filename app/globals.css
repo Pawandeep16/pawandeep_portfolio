@@ -9,6 +9,7 @@
   --card-bg-start: 255, 255, 255;
   --card-bg-end: 214, 219, 220;
   --card-text: 0, 0, 0;
+  transition: background-color 0.5s, color 0.5s;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -84,10 +85,12 @@
   }
   body {
     @apply bg-background text-foreground;
+    transition: background-color 0.5s, color 0.5s;
   }
   .card {
     background: linear-gradient(to bottom right, rgb(var(--card-bg-start)), rgb(var(--card-bg-end)));
     color: rgb(var(--card-text));
+    transition: background-color 0.5s, color 0.5s;
   }
 }
 * {

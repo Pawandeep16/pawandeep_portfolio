@@ -1,28 +1,97 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { Award, X, ZoomIn } from "lucide-react"
-import { useState } from "react"
+import { Award, ChevronLeft, ChevronRight, X } from "lucide-react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { Button } from "@/components/ui/button"
 
 const certificates = [
   {
-    title: "AWS Certified Solutions Architect",
-    issuer: "Amazon Web Services",
-    date: "2023",
-    description: "Expertise in designing distributed systems and deploying applications on AWS infrastructure.",
-    image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&h=600&fit=crop",
+    title: "Advanced Web Development",
+    issuer: "Guru Nanak Dev Engineering College",
+    date: "2021",
+    description: "Expertise in designing web application systems and deploying applications on various .",
+    image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625382/guru_nanak_dev_engineering_technology_certificate_full_stack_mvq8yu.webp",
     badgeColor: "bg-[#FF9900]/10 text-[#FF9900]"
   },
-  // ... other certificates
+  {
+    title: "Android App Development",
+    issuer: "Internshala",
+    date: "2021",
+    description: "Certified in Android App Development, demonstrating proficiency in building and deploying Android applications.",
+    image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625382/Android_app_Developemnt_tfhy1h.webp",
+    badgeColor: "bg-[#4285F4]/10 text-[#4285F4]"
+  },
+  {
+    title: "Java Developemnt Training",
+    issuer: "IIT Bombay",
+    date: "2021",
+    description: "Specialized in Microsoft Azure cloud services and solutions architecture.",
+    image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625824/java_u2ssxm.webp",
+    badgeColor: "bg-[#00A4EF]/10 text-[#00A4EF]"
+  },
+  {
+    title: "Latex  Training",
+    issuer: "IIT Bombay",
+    date: "2021",
+    description: "Specialized in Microsoft Azure cloud services and solutions architecture.",
+    image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625958/latex_yhm6wz.webp",
+    badgeColor: "bg-[#00A4EF]/10 text-[#00A4EF]"
+  }
 ]
 
 export function Certifications() {
+  const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [direction, setDirection] = useState(0)
+
+  const handlePrevious = () => {
+    setDirection(-1)
+    setCurrentIndex((prev) => (prev === 0 ? certificates.length - 1 : prev - 1))
+  }
+
+  const handleNext = () => {
+    setDirection(1)
+    setCurrentIndex((prev) => (prev === certificates.length - 1 ? 0 : prev + 1))
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedImage) {
+        if (e.key === 'Escape') setSelectedImage(null)
+      } else {
+        if (e.key === 'ArrowLeft') handlePrevious()
+        if (e.key === 'ArrowRight') handleNext()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedImage])
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0,
+      scale: 0.8,
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0,
+      scale: 0.8,
+    }),
+  }
 
   return (
-    <section id="certifications" className="py-20">
+    <section className="py-20 overflow-hidden">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -36,89 +105,136 @@ export function Certifications() {
           </p>
         </motion.div>
 
-        <ScrollArea className="h-[600px] rounded-lg p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {certificates.map((cert, index) => (
+        <div className="relative max-w-3xl mx-auto">
+          <div className="absolute inset-y-0 -left-20 flex items-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-background/80 hover:text-primary transition-colors"
+              onClick={handlePrevious}
+            >
+              <ChevronLeft className="w-8 h-8" />
+            </Button>
+          </div>
+
+          <div className="absolute inset-y-0 -right-20 flex items-center">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hover:bg-background/80 hover:text-primary transition-colors"
+              onClick={handleNext}
+            >
+              <ChevronRight className="w-8 h-8" />
+            </Button>
+          </div>
+
+          <div className="relative h-[500px] overflow-hidden">
+            <AnimatePresence initial={false} custom={direction}>
               <motion.div
-                key={cert.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-                className="group relative"
+                key={currentIndex}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: "spring", stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.2 },
+                  scale: { duration: 0.4 }
+                }}
+                className="absolute inset-0"
               >
-                <div className="bg-card rounded-lg overflow-hidden shadow-lg border border-border/50 transition-transform duration-300 hover:scale-[1.02]">
+                <div className="bg-card rounded-lg overflow-hidden shadow-lg border border-border/50 h-full">
                   <div 
-                    className="relative h-48 cursor-pointer overflow-hidden"
-                    onClick={() => setSelectedImage(cert.image)}
+                    className="relative h-64 cursor-pointer"
+                    onClick={() => setSelectedImage(certificates[currentIndex].image)}
                   >
                     <Image
-                      src={cert.image}
-                      alt={cert.title}
+                      src={certificates[currentIndex].image}
+                      alt={certificates[currentIndex].title}
                       fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="object-cover transition-transform duration-300 hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
-                      <ZoomIn className="w-8 h-8 text-white" />
-                    </div>
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <span className={`inline-block px-2 py-1 rounded-md text-sm ${cert.badgeColor} mb-2`}>
-                        {cert.issuer}
+                    <div className="absolute bottom-4 left-4">
+                      <span className={`inline-block px-2 py-1 rounded-md text-sm ${certificates[currentIndex].badgeColor}`}>
+                        {certificates[currentIndex].issuer}
                       </span>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Award className="w-5 h-5 text-primary" />
-                      <h3 className="font-semibold">{cert.title}</h3>
+                  <div className="p-8">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Award className="w-6 h-6 text-primary" />
+                      <h3 className="text-xl font-semibold">{certificates[currentIndex].title}</h3>
                     </div>
-                    <p className="text-muted-foreground">{cert.description}</p>
-                    <div className="mt-4 text-sm text-muted-foreground">
-                      Issued: {cert.date}
+                    <p className="text-muted-foreground text-lg mb-6">{certificates[currentIndex].description}</p>
+                    <div className="text-sm text-muted-foreground">
+                      Issued: {certificates[currentIndex].date}
                     </div>
                   </div>
                 </div>
               </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <div className="flex justify-center mt-8 gap-2">
+            {certificates.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setDirection(index > currentIndex ? 1 : -1)
+                  setCurrentIndex(index)
+                }}
+                className="p-1"
+              >
+                <div
+                  className={`w-8 h-2 rounded-full transition-colors ${
+                    index === currentIndex
+                      ? "bg-primary"
+                      : "bg-primary/20"
+                  }`}
+                />
+              </button>
             ))}
           </div>
-        </ScrollArea>
-
-        <AnimatePresence>
-          {selectedImage && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
-              onClick={() => setSelectedImage(null)}
-            >
-              <motion.div
-                initial={{ scale: 0.9 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.9 }}
-                className="relative max-w-4xl w-full mx-4"
-                onClick={e => e.stopPropagation()}
-              >
-                <button
-                  onClick={() => setSelectedImage(null)}
-                  className="absolute -top-12 right-0 text-foreground hover:text-primary transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
-                  <Image
-                    src={selectedImage}
-                    alt="Certificate"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        </div>
       </div>
+
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+            onClick={() => setSelectedImage(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="relative max-w-4xl w-full mx-4"
+              onClick={e => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-12 right-0 text-foreground hover:text-primary transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              <div className="relative aspect-video rounded-lg overflow-hidden">
+                <Image
+                  src={selectedImage}
+                  alt="Certificate"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }
