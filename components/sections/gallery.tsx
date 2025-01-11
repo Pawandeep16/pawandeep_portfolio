@@ -28,7 +28,7 @@ export function Gallery() {
     setVisibleImages((prev) => prev + ITEMS_PER_PAGE)
   }
 
-  const handleImageClick = (image) => {
+  const handleImageClick = (image: string) => {
     setCurrentImage(image)
     setIsModalOpen(true)
   }
