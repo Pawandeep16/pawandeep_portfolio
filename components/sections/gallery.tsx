@@ -30,9 +30,14 @@ export function Gallery() {
   }
 
   const handleImageClick = (image: string, index: number) => {
-    setCurrentImage(image)
-    setExpandedImageIndex(index)
-    setIsModalOpen(true)
+    // Toggle the expanded state
+    if (expandedImageIndex === index) {
+      setExpandedImageIndex(null) // Collapse the image if it's already expanded
+    } else {
+      setCurrentImage(image)
+      setExpandedImageIndex(index)
+      setIsModalOpen(true)
+    }
   }
 
   const closeModal = () => {
@@ -42,7 +47,15 @@ export function Gallery() {
   }
 
   return (
-    <section id="gallery" className="min-h-screen ">
+    <section id="gallery" className="min-h-screen">
+      {/* Heading and Subheading */}
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-semibold text-gray-800">Explore My Artwork</h1>
+        <p className="text-xl text-gray-600 mt-2">
+          A curated collection showcasing my artistic journey, creativity, and diverse expression through digital and traditional mediums.
+        </p>
+      </div>
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {transitions((style, artwork, t, index) => (
@@ -51,21 +64,22 @@ export function Gallery() {
               style={style}
               className="relative group"
             >
-              <Image
+              <img
                 src={artwork.image}
                 alt={artwork.title}
-                width={artwork.width || 400}  // Dynamic width based on artwork
-                height={artwork.height || 400} // Dynamic height based on artwork
                 className="object-cover w-full h-full rounded-lg cursor-pointer"
                 style={{
-                  aspectRatio: artwork.aspectRatio || "1/1", // Use artwork's aspect ratio or default to 1:1
-                  transform: expandedImageIndex === index ? "scale(1.2)" : "scale(1)",
+                  width: 'auto',
+                  height: 'auto',
+                  maxWidth: '100%', // Limit max width to 100% of container size
+                  maxHeight: '100%',
+                  transform: expandedImageIndex === index ? "scale(1.5)" : "scale(1)",
                   transition: "transform 0.3s ease",
-                  zIndex: expandedImageIndex === index ? 10 : "auto",
+                  zIndex: expandedImageIndex === index ? 100 : 10, // Higher z-index for the expanded image
                 }}
                 onClick={() => handleImageClick(artwork.image, index)}
               />
-              <div className="absolute inset-0  opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <div className="absolute bottom-4 left-4 text-white p-2 rounded-lg">
                   <h1 className="text-xl">{artwork.category}</h1>
                   <p className="text-lg">{artwork.title}</p>
@@ -95,7 +109,6 @@ export function Gallery() {
         )}
       </div>
 
-     
     </section>
   )
 }

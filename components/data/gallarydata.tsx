@@ -3,7 +3,8 @@ type Artwork = {
     title: string
     description?: string
     category?: string
-    aspectRatio?: string
+  
+    
   }
 
 export const artworks:Artwork[] = [
@@ -130,22 +131,3 @@ export const artworks:Artwork[] = [
     
   ]
 
-
-// //   links
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622664/IMG_20190604_095623_nodjrx.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622663/nav_lqxkp6.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622663/narveer_and_his_wife_v1zqdb.webp
-// // https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622659/nimratt_a_mld1bs.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622659/night_wn9smn.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622659/pawan_yojpjd.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622659/stark_Recovered_2_vf9vj0.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622659/sunset_dnrcip.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622656/123_hynmst.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622655/anne_mariepp_o5cv6o.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622655/bhagat_singh1_sepf7x.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622655/535_bmfbu3.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622655/Arthur_gbdak5.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622655/billie-eilish-vogue-uk-2021-4k-4u_uukeol.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622654/boy_girl_art_ut3vcp.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622654/eivor_lu7897.webp
-// https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736622654/Emma_watson_Recovered_takmvu.webp

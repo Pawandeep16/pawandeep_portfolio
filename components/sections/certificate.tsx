@@ -11,7 +11,7 @@ const certificates = [
     title: "Advanced Web Development",
     issuer: "Guru Nanak Dev Engineering College",
     date: "2021",
-    description: "Expertise in designing web application systems and deploying applications on various .",
+    description: "Developed advanced skills in designing and building dynamic web applications, focusing on both frontend and backend systems. Gained proficiency in deploying applications on various platforms for optimal performance.",
     image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625382/guru_nanak_dev_engineering_technology_certificate_full_stack_mvq8yu.webp",
     badgeColor: "bg-[#FF9900]/10 text-[#FF9900]"
   },
@@ -19,23 +19,23 @@ const certificates = [
     title: "Android App Development",
     issuer: "Internshala",
     date: "2021",
-    description: "Certified in Android App Development, demonstrating proficiency in building and deploying Android applications.",
+    description: "Completed a comprehensive course in Android App Development, demonstrating expertise in building user-friendly and efficient Android applications. Proficient in Java and Kotlin, with experience in deploying apps to the Google Play Store.",
     image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625382/Android_app_Developemnt_tfhy1h.webp",
     badgeColor: "bg-[#4285F4]/10 text-[#4285F4]"
   },
   {
-    title: "Java Developemnt Training",
+    title: "Java Development Training",
     issuer: "IIT Bombay",
     date: "2021",
-    description: "Specialized in Microsoft Azure cloud services and solutions architecture.",
+    description: "Gained in-depth knowledge of Java programming and object-oriented design principles. Focused on developing efficient Java applications, with experience in working with Java-based frameworks and libraries.",
     image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625824/java_u2ssxm.webp",
     badgeColor: "bg-[#00A4EF]/10 text-[#00A4EF]"
   },
   {
-    title: "Latex  Training",
+    title: "Latex Training",
     issuer: "IIT Bombay",
     date: "2021",
-    description: "Specialized in Microsoft Azure cloud services and solutions architecture.",
+    description: "Acquired specialized skills in LaTeX, a typesetting system widely used for technical and scientific documents. Mastered advanced formatting techniques to create professional-looking research papers, articles, and presentations.",
     image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625958/latex_yhm6wz.webp",
     badgeColor: "bg-[#00A4EF]/10 text-[#00A4EF]"
   }
