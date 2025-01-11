@@ -12,6 +12,7 @@ export function Gallery() {
   const [visibleImages, setVisibleImages] = useState(ITEMS_PER_PAGE)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState<string | null>(null)
+  const [expandedImageIndex, setExpandedImageIndex] = useState<number | null>(null)
 
   const transitions = useTransition(
     artworks.slice(0, visibleImages),
@@ -28,36 +29,50 @@ export function Gallery() {
     setVisibleImages((prev) => prev + ITEMS_PER_PAGE)
   }
 
-  const handleImageClick = (image: string) => {
+  const handleImageClick = (image: string, index: number) => {
     setCurrentImage(image)
+    setExpandedImageIndex(index)
     setIsModalOpen(true)
   }
 
   const closeModal = () => {
     setIsModalOpen(false)
     setCurrentImage(null)
+    setExpandedImageIndex(null)
   }
 
   return (
-    <section id="gallery" className="min-h-screen bg-black">
+    <section id="gallery" className="min-h-screen ">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {transitions((style, artwork) => (
-            <animated.div key={artwork.image} style={style} className="relative group">
+          {transitions((style, artwork, t, index) => (
+            <animated.div
+              key={artwork.image}
+              style={style}
+              className="relative group"
+            >
               <Image
                 src={artwork.image}
                 alt={artwork.title}
-                width={400}
-                height={400}
-                className="object-cover w-full h-full rounded-lg"
+                width={artwork.width || 400}  // Dynamic width based on artwork
+                height={artwork.height || 400} // Dynamic height based on artwork
+                className="object-cover w-full h-full rounded-lg cursor-pointer"
                 style={{
                   aspectRatio: artwork.aspectRatio || "1/1", // Use artwork's aspect ratio or default to 1:1
+                  transform: expandedImageIndex === index ? "scale(1.2)" : "scale(1)",
+                  transition: "transform 0.3s ease",
+                  zIndex: expandedImageIndex === index ? 10 : "auto",
                 }}
+                onClick={() => handleImageClick(artwork.image, index)}
               />
-              {/* Overlay with Enlarge Icon */}
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div className="absolute inset-0  opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="absolute bottom-4 left-4 text-white p-2 rounded-lg">
+                  <h1 className="text-xl">{artwork.category}</h1>
+                  <p className="text-lg">{artwork.title}</p>
+                  <p className="text-sm">{artwork.description}</p> {/* Image title or description */}
+                </div>
                 <button
-                  onClick={() => handleImageClick(artwork.image)}
+                  onClick={() => handleImageClick(artwork.image, index)}
                   className="bg-white p-2 rounded-full shadow-lg hover:bg-gray-200 transition-all"
                   title="Enlarge"
                 >
@@ -74,32 +89,13 @@ export function Gallery() {
               onClick={handleViewMore}
               className="px-6 py-3 bg-white text-black rounded-full shadow-md hover:shadow-lg transition-all"
             >
-              View More
+              Load More
             </button>
           </div>
         )}
       </div>
 
-      {/* Full-Screen Modal */}
-      {isModalOpen && currentImage && (
-  <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
-    <button
-      onClick={closeModal}
-      className="absolute top-4 right-4 text-white text-xl"
-    >
-      ✕
-    </button>
-    <div className="max-w-5xl w-full px-4">
-      <Image
-        src={currentImage}
-        alt="Full Screen"
-        width={1600}
-        height={900}
-        className="object-contain w-full h-auto"
-      />
-    </div>
-  </div>
-)}
+     
     </section>
   )
 }
