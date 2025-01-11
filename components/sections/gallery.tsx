@@ -11,7 +11,7 @@ const ITEMS_PER_PAGE = 6 // Number of images to show initially or per load
 export function Gallery() {
   const [visibleImages, setVisibleImages] = useState(ITEMS_PER_PAGE)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [currentImage, setCurrentImage] = useState(null)
+  const [currentImage, setCurrentImage] = useState<string | null>(null)
 
   const transitions = useTransition(
     artworks.slice(0, visibleImages),
@@ -81,25 +81,25 @@ export function Gallery() {
       </div>
 
       {/* Full-Screen Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
-          <button
-            onClick={closeModal}
-            className="absolute top-4 right-4 text-white text-xl"
-          >
-            ✕
-          </button>
-          <div className="max-w-5xl w-full px-4">
-            <Image
-              src={currentImage}
-              alt="Full Screen"
-              width={1600}
-              height={900}
-              className="object-contain w-full h-auto"
-            />
-          </div>
-        </div>
-      )}
+      {isModalOpen && currentImage && (
+  <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
+    <button
+      onClick={closeModal}
+      className="absolute top-4 right-4 text-white text-xl"
+    >
+      ✕
+    </button>
+    <div className="max-w-5xl w-full px-4">
+      <Image
+        src={currentImage}
+        alt="Full Screen"
+        width={1600}
+        height={900}
+        className="object-contain w-full h-auto"
+      />
+    </div>
+  </div>
+)}
     </section>
   )
 }
