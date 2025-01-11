@@ -1,4 +1,12 @@
-export const artworks = [
+type Artwork = {
+    image: string
+    title: string
+    description?: string
+    category?: string
+    aspectRatio?: string
+  }
+
+export const artworks:Artwork[] = [
     {
       title: "Digital Abstract",
       description: "A vibrant exploration of color and form in digital space",
