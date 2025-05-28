@@ -10,19 +10,19 @@ const socialLinks = [
   {
     name: "LinkedIn",
     icon: <Linkedin className="w-5 h-5" />,
-    href: "https://www.linkedin.com/in/your-profile",
+    href: "https://www.linkedin.com/in/pawandeep-thandi-2432031ab/",
     color: "hover:text-[#0077B5]"
   },
   {
     name: "GitHub",
     icon: <Github className="w-5 h-5" />,
-    href: "https://github.com/your-username",
+    href: "https://github.com/Pawandeep16",
     color: "hover:text-[#333]"
   },
   {
     name: "Instagram",
     icon: <Instagram className="w-5 h-5" />,
-    href: "https://instagram.com/your-handle",
+    href: "https://www.instagram.com/thandipawandeep16/?next=%2F",
     color: "hover:text-[#E4405F]"
   }
 ]
