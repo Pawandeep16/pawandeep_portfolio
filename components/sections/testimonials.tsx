@@ -2,26 +2,29 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
-import { Quote } from "lucide-react"
+import { Quote, Linkedin } from "lucide-react"
 
 const testimonials = [
   {
     name: "Sukhjit Singh Ahluwalia",
     role: "Professor Glasgow Caledonian University",
-    image: "https://media.licdn.com/dms/image/v2/D4E03AQEX4mh9Ial9sQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1686785193097?e=1741824000&v=beta&t=C9xCyAIJ6sI6EmRmJQx_jAqI3Osjp3W3tDJXKmRBDww",
-    content: "Working with Pawandeep was an absolute pleasure. Their attention to detail and creative solutions helped transform our vision into reality."
+    image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1748397217/Testomonials/gxvktgcfk3zd5zkjv5bo.jpg",
+    content: "Working with Pawandeep was an absolute pleasure. Their attention to detail and creative solutions helped transform our vision into reality.",
+    linkedin: "https://www.linkedin.com/in/sukhforchange/"
   },
   {
     name: "Manjodh Singh Saran",
     role: "SDE @CBC - MERN",
-    image: "https://media.licdn.com/dms/image/v2/D5603AQFg-_CP-veeNw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1722969008247?e=1741824000&v=beta&t=-_Lma5l-XSYhHbo6XXhnCecx_4nF8LFZuvrqM2gk15s",
-    content: "Exceptional design skills and a great eye for aesthetics. Pawandeep consistently delivered beyond our expectations."
+    image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1748397217/Testomonials/d7kk9dytffu3tz78mrt8.jpg",
+    content: "Exceptional design skills and a great eye for aesthetics. Pawandeep consistently delivered beyond our expectations.",
+    linkedin: "https://www.linkedin.com/in/manjodh-saran/"
   },
   {
     name: "Pooja Rani",
     role: "Executive @ Honda",
-    image: "https://media.licdn.com/dms/image/v2/D5603AQFddq4EZ_F41w/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1729438741113?e=1741824000&v=beta&t=h20ibpn3Eewjc4F9yoHbyxLxHrrf_JxYf1-tYplA9jM",
-    content: "A talented developer who brings both technical expertise and creative flair to every project. It was a joy collaborating with them."
+    image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1748397217/Testomonials/m788edggvywqdbxvfhfu.jpg",
+    content: "A talented developer who brings both technical expertise and creative flair to every project. It was a joy collaborating with them.",
+    linkedin: "https://www.linkedin.com/in/pooja-rani-1810/"
   }
 ]
 
@@ -62,11 +65,22 @@ export function Testimonials() {
                   />
                 </div>
                 <div>
-                  <h3 className="font-semibold">{testimonial.name}</h3>
+                  <h3 className="font-semibold">{testimonial.name}  {testimonial.linkedin && (
+                <a
+                  href={testimonial.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className=" ml-3 inline-flex items-center gap-2 text-blue-600 hover:underline text-sm font-medium"
+                >
+                  <Linkedin className="w-4 h-4" />
+                 
+                </a>
+              )}</h3>
                   <p className="text-sm text-muted-foreground">{testimonial.role}</p>
                 </div>
               </div>
-              <p className="text-muted-foreground">{testimonial.content}</p>
+              <p className="text-muted-foreground mb-4">{testimonial.content}</p>
+            
             </motion.div>
           ))}
         </div>
