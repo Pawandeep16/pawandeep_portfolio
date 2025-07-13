@@ -1,3 +1,5 @@
+'use client'; // 👈 Add this at the top
+
 import { NextStudio } from 'next-sanity/studio';
 import config from '../../../sanity.config';
 
