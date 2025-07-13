@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { Award, ChevronLeft, ChevronRight, X, ExternalLink } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { client, CERTIFICATIONS_QUERY, urlFor } from '@/lib/sanity'
@@ -24,7 +24,6 @@ export function Certifications() {
   })
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100])
-
   const minSwipeDistance = 50
 
   useEffect(() => {
@@ -34,7 +33,6 @@ export function Certifications() {
         setCertificates(data)
       } catch (error) {
         console.error('Error fetching certifications:', error)
-        // Fallback data
         setCertificates([
           {
             _id: '1',
@@ -55,6 +53,16 @@ export function Certifications() {
 
     fetchCertifications()
   }, [])
+
+  const handlePrevious = useCallback(() => {
+    setDirection(-1)
+    setCurrentIndex((prev) => (prev === 0 ? certificates.length - 1 : prev - 1))
+  }, [certificates.length])
+
+  const handleNext = useCallback(() => {
+    setDirection(1)
+    setCurrentIndex((prev) => (prev === certificates.length - 1 ? 0 : prev + 1))
+  }, [certificates.length])
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null)
@@ -78,16 +86,6 @@ export function Certifications() {
     }
   }
 
-  const handlePrevious = () => {
-    setDirection(-1)
-    setCurrentIndex((prev) => (prev === 0 ? certificates.length - 1 : prev - 1))
-  }
-
-  const handleNext = () => {
-    setDirection(1)
-    setCurrentIndex((prev) => (prev === certificates.length - 1 ? 0 : prev + 1))
-  }
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedImage) {
@@ -100,7 +98,7 @@ export function Certifications() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedImage])
+  }, [selectedImage, handlePrevious, handleNext])
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -140,7 +138,6 @@ export function Certifications() {
       </section>
     )
   }
-
   return (
     <section ref={containerRef} className="py-20 relative overflow-hidden">
       {/* Background */}

@@ -117,150 +117,109 @@
 //     gradient: "from-red-500 to-yellow-500",
 //   },
 // ];
+"use client";
 
-
-"use client"
-
-import { motion, useScroll, useTransform } from "framer-motion"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
-import { client, PROJECTS_QUERY, urlFor } from '@/lib/sanity'
-import { Project } from '@/lib/types'
+import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { client, PROJECTS_QUERY, urlFor } from '@/lib/sanity';
+import { Project } from '@/lib/types';
 
 export function Projects() {
-  const [projects, setProjects] = useState<Project[]>([])
-  const [loading, setLoading] = useState(true)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [direction, setDirection] = useState(0)
-  const [touchStart, setTouchStart] = useState<number | null>(null)
-  const [touchEnd, setTouchEnd] = useState<number | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
-  
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"]
-  })
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100])
-
-  const minSwipeDistance = 50
+  const minSwipeDistance = 50;
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const data = await client.fetch(PROJECTS_QUERY)
-        setProjects(data)
+        const data = await client.fetch(PROJECTS_QUERY);
+        setProjects(data);
       } catch (error) {
-        console.error('Error fetching projects:', error)
-        // Fallback data
-        setProjects([
-          {
-            _id: '1',
-            title: "E-commerce Platform",
-            description: "A full-stack e-commerce solution with real-time inventory management, secure payments, and an intuitive admin dashboard.",
-            image: null,
-            tags: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL", "Stripe"],
-            liveUrl: "#",
-            githubUrl: "#",
-            gradient: "from-blue-500 to-purple-600",
-            featured: true,
-            order: 1
-          }
-        ])
+        console.error('Error fetching projects:', error);
+        setProjects([{
+          _id: '1',
+          title: "Fallback Project",
+          description: "Sample fallback project.",
+          image: null,
+          tags: ["React"],
+          liveUrl: "#",
+          githubUrl: "#",
+          gradient: "from-blue-500 to-purple-600",
+          featured: true,
+          order: 1
+        }]);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchProjects()
-  }, [])
+    fetchProjects();
+  }, []);
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null)
-    setTouchStart(e.targetTouches[0].clientX)
-  }
+  const handlePrevious = useCallback(() => {
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev === 0 ? projects.length - 1 : prev - 1));
+  }, [projects.length]);
 
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
-  }
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
-    const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > minSwipeDistance
-    const isRightSwipe = distance < -minSwipeDistance
-
-    if (isLeftSwipe) {
-      handleNext()
-    } else if (isRightSwipe) {
-      handlePrevious()
-    }
-  }
-
-  const handlePrevious = () => {
-    setDirection(-1)
-    setCurrentIndex((prev) => (prev === 0 ? projects.length - 1 : prev - 1))
-  }
-
-  const handleNext = () => {
-    setDirection(1)
-    setCurrentIndex((prev) => (prev === projects.length - 1 ? 0 : prev + 1))
-  }
-
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -400, behavior: 'smooth' })
-    }
-  }
-
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 400, behavior: 'smooth' })
-    }
-  }
+  const handleNext = useCallback(() => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev === projects.length - 1 ? 0 : prev + 1));
+  }, [projects.length]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') handlePrevious()
-      if (e.key === 'ArrowRight') handleNext()
-    }
+      if (e.key === 'ArrowLeft') handlePrevious();
+      if (e.key === 'ArrowRight') handleNext();
+    };
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleNext, handlePrevious]);
 
-  if (loading) {
-    return (
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-white to-orange-50/30 dark:from-purple-950/50 dark:via-slate-900 dark:to-orange-950/30" />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-16">
-            <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mb-6 max-w-md mx-auto" />
-            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse max-w-2xl mx-auto" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-3xl animate-pulse" />
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    if (distance > minSwipeDistance) handleNext();
+    if (distance < -minSwipeDistance) handlePrevious();
+  };
+
+  const scrollLeft = () => {
+    scrollContainerRef.current?.scrollBy({ left: -400, behavior: 'smooth' });
+  };
+
+  const scrollRight = () => {
+    scrollContainerRef.current?.scrollBy({ left: 400, behavior: 'smooth' });
+  };
 
   return (
     <section ref={containerRef} className="py-20 relative overflow-hidden">
-      {/* Background with seamless blending */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-white to-orange-50/30 dark:from-purple-950/50 dark:via-slate-900 dark:to-orange-950/30" />
-      
-      {/* Floating Elements */}
-      <motion.div 
-        className="absolute inset-0 opacity-20"
-        style={{ y }}
-      >
+      <motion.div className="absolute inset-0 opacity-20" style={{ y }}>
         <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-purple-400/30 to-pink-600/30 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-blue-400/30 to-purple-600/30 rounded-full blur-3xl" />
       </motion.div>
@@ -269,7 +228,6 @@ export function Projects() {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
@@ -277,41 +235,27 @@ export function Projects() {
             Featured Projects
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-            A selection of my recent work and personal projects that showcase my skills and creativity
+            A selection of my recent work and personal projects that showcase my skills and creativity.
           </p>
         </motion.div>
 
-        {/* Desktop View - Horizontal Scrolling */}
+        {/* Desktop */}
         <div className="hidden lg:block relative">
-          {/* Navigation Arrows */}
-          <button
-            onClick={scrollLeft}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full glass hover:scale-110 transition-all duration-300 shadow-lg"
-          >
+          <button onClick={scrollLeft} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full glass hover:scale-110 shadow-lg">
             <ChevronLeft className="w-6 h-6" />
           </button>
-          
-          <button
-            onClick={scrollRight}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full glass hover:scale-110 transition-all duration-300 shadow-lg"
-          >
+          <button onClick={scrollRight} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full glass hover:scale-110 shadow-lg">
             <ChevronRight className="w-6 h-6" />
           </button>
 
-          {/* Scrollable Container */}
-          <div 
-            ref={scrollContainerRef}
-            className="flex gap-8 overflow-x-auto scrollbar-hide pb-4 px-12"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
+          <div ref={scrollContainerRef} className="flex gap-8 overflow-x-auto scrollbar-hide pb-4 px-12">
             {projects.map((project, index) => (
               <motion.div
                 key={project._id}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="apple-card group flex-shrink-0 w-96"
+                className="apple-card flex-shrink-0 w-96"
               >
                 <div className="relative h-48 overflow-hidden rounded-t-3xl">
                   {project.image ? (
@@ -319,49 +263,26 @@ export function Projects() {
                       src={urlFor(project.image).url()}
                       alt={project.title}
                       fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800" />
+                    <div className="w-full h-full bg-gray-200 dark:bg-gray-800" />
                   )}
                   <div className={`absolute inset-0 bg-gradient-to-t ${project.gradient} opacity-20`} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold mb-3 text-slate-900 dark:text-white">
-                    {project.title}
-                  </h3>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm mb-4 leading-relaxed line-clamp-3">
-                    {project.description}
-                  </p>
+                  <h3 className="text-xl font-bold mb-3 text-slate-900 dark:text-white">{project.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm mb-4 line-clamp-3">{project.description}</p>
                   <div className="flex flex-wrap gap-1 mb-4">
-                    {project.tags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-full"
-                      >
-                        {tag}
-                      </span>
+                    {project.tags.slice(0, 3).map(tag => (
+                      <span key={tag} className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-xs rounded-full">{tag}</span>
                     ))}
-                    {project.tags.length > 3 && (
-                      <span className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-full">
-                        +{project.tags.length - 3}
-                      </span>
-                    )}
+                    {project.tags.length > 3 && <span className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-xs rounded-full">+{project.tags.length - 3}</span>}
                   </div>
                   <div className="flex gap-2">
-                    {project.liveUrl && (
-                      <Button size="sm" className={`bg-gradient-to-r ${project.gradient} text-white flex-1`}>
-                        <ExternalLink className="w-3 h-3 mr-1" />
-                        Demo
-                      </Button>
-                    )}
-                    {project.githubUrl && (
-                      <Button variant="outline" size="sm" className="flex-1">
-                        <Github className="w-3 h-3 mr-1" />
-                        Code
-                      </Button>
-                    )}
+                    {project.liveUrl && <Button size="sm" className={`bg-gradient-to-r ${project.gradient} text-white flex-1`}><ExternalLink className="w-3 h-3 mr-1" />Demo</Button>}
+                    {project.githubUrl && <Button variant="outline" size="sm" className="flex-1"><Github className="w-3 h-3 mr-1" />Code</Button>}
                   </div>
                 </div>
               </motion.div>
@@ -369,36 +290,20 @@ export function Projects() {
           </div>
         </div>
 
-        {/* Mobile View - Single Card with Navigation */}
+        {/* Mobile */}
         <div className="lg:hidden relative max-w-sm mx-auto">
           <div className="absolute inset-y-0 -left-12 flex items-center z-10">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-10 h-10 rounded-full glass hover:scale-110"
-              onClick={handlePrevious}
-            >
+            <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full glass" onClick={handlePrevious}>
               <ChevronLeft className="w-5 h-5" />
             </Button>
           </div>
-
           <div className="absolute inset-y-0 -right-12 flex items-center z-10">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-10 h-10 rounded-full glass hover:scale-110"
-              onClick={handleNext}
-            >
+            <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full glass" onClick={handleNext}>
               <ChevronRight className="w-5 h-5" />
             </Button>
           </div>
 
-          <div 
-            className="relative h-[600px] overflow-hidden rounded-3xl"
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
-          >
+          <div className="relative h-[600px] overflow-hidden rounded-3xl" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
             <motion.div
               key={currentIndex}
               initial={{ x: direction > 0 ? 300 : -300, opacity: 0 }}
@@ -417,72 +322,42 @@ export function Projects() {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800" />
+                    <div className="w-full h-full bg-gray-200 dark:bg-gray-800" />
                   )}
                   <div className={`absolute inset-0 bg-gradient-to-t ${projects[currentIndex]?.gradient} opacity-20`} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">
-                    {projects[currentIndex]?.title}
-                  </h3>
-                  <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
-                    {projects[currentIndex]?.description}
-                  </p>
+                  <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">{projects[currentIndex]?.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">{projects[currentIndex]?.description}</p>
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {projects[currentIndex]?.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm rounded-full"
-                      >
-                        {tag}
-                      </span>
+                    {projects[currentIndex]?.tags.map(tag => (
+                      <span key={tag} className="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-sm rounded-full">{tag}</span>
                     ))}
                   </div>
                   <div className="flex gap-3">
-                    {projects[currentIndex]?.liveUrl && (
-                      <Button className={`bg-gradient-to-r ${projects[currentIndex]?.gradient} text-white flex-1`}>
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Live Demo
-                      </Button>
-                    )}
-                    {projects[currentIndex]?.githubUrl && (
-                      <Button variant="outline" className="flex-1">
-                        <Github className="w-4 h-4 mr-2" />
-                        View Code
-                      </Button>
-                    )}
+                    {projects[currentIndex]?.liveUrl && <Button className={`bg-gradient-to-r ${projects[currentIndex]?.gradient} text-white flex-1`}><ExternalLink className="w-4 h-4 mr-2" />Live Demo</Button>}
+                    {projects[currentIndex]?.githubUrl && <Button variant="outline" className="flex-1"><Github className="w-4 h-4 mr-2" />View Code</Button>}
                   </div>
                 </div>
               </div>
             </motion.div>
           </div>
 
-          {/* Swipe Indicators */}
           <div className="flex justify-center mt-6 gap-2">
             {projects.map((_, index) => (
               <button
                 key={index}
                 onClick={() => {
-                  setDirection(index > currentIndex ? 1 : -1)
-                  setCurrentIndex(index)
+                  setDirection(index > currentIndex ? 1 : -1);
+                  setCurrentIndex(index);
                 }}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  index === currentIndex 
-                    ? 'bg-purple-500 w-8' 
-                    : 'bg-gray-300 dark:bg-gray-600'
-                }`}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex ? 'bg-purple-500 w-8' : 'bg-gray-300 dark:bg-gray-600'}`}
               />
             ))}
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </section>
-  )
+  );
 }

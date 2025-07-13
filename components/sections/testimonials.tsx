@@ -26,7 +26,6 @@ export function Testimonials() {
         setTestimonials(data)
       } catch (error) {
         console.error('Error fetching testimonials:', error)
-        // Fallback data
         setTestimonials([
           {
             _id: '1',
@@ -68,14 +67,9 @@ export function Testimonials() {
 
   return (
     <section ref={containerRef} className="py-20 relative overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-pink-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-pink-950/30" />
-      
-      {/* Floating Elements */}
-      <motion.div 
-        className="absolute inset-0 opacity-20"
-        style={{ y }}
-      >
+
+      <motion.div className="absolute inset-0 opacity-20" style={{ y }}>
         <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-pink-400/30 to-purple-600/30 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-blue-400/30 to-pink-600/30 rounded-full blur-3xl" />
       </motion.div>
@@ -92,7 +86,7 @@ export function Testimonials() {
             Client Testimonials
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-            What people say about working with me and the results we've achieved together
+            What people say about working with me and the results we&apos;ve achieved together
           </p>
         </motion.div>
 
@@ -110,20 +104,17 @@ export function Testimonials() {
               <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm p-8 rounded-3xl shadow-lg hover:shadow-2xl border border-white/20 dark:border-slate-700/20 transition-all duration-500">
                 <Quote className="absolute top-6 right-6 w-8 h-8 text-pink-500/30" />
-                
-                {/* Rating */}
+
                 <div className="flex gap-1 mb-6">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
 
-                {/* Content */}
                 <p className="text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
-                  "{testimonial.content}"
+                  &ldquo;{testimonial.content}&rdquo;
                 </p>
 
-                {/* Author */}
                 <div className="flex items-center gap-4">
                   <div className="relative w-16 h-16 rounded-full overflow-hidden ring-2 ring-pink-500/20">
                     {testimonial.image ? (
@@ -142,12 +133,8 @@ export function Testimonials() {
                     )}
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 dark:text-white">
-                      {testimonial.name}
-                    </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      {testimonial.role}
-                    </p>
+                    <h3 className="font-bold text-slate-900 dark:text-white">{testimonial.name}</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">{testimonial.role}</p>
                     <p className="text-xs text-pink-600 dark:text-pink-400 font-medium">
                       {testimonial.company}
                     </p>

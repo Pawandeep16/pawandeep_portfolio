@@ -1,3 +1,4 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -6,12 +7,9 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**.cdn.sanity.io',
-      },
-    ],
+    unoptimized: true, // if you're disabling Next.js image optimization
+    domains: ['cdn.sanity.io'],
   },
 };
+
+module.exports = nextConfig;

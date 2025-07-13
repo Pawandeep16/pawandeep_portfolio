@@ -9,27 +9,27 @@ const socialLinks = [
   {
     name: "LinkedIn",
     icon: <Linkedin className="w-6 h-6" />,
-    href: "https://www.linkedin.com/in/your-profile",
+    href: "https://www.linkedin.com/in/pawandeep-thandi-2432031ab/",
     color: "hover:text-[#0077B5]",
     bgColor: "hover:bg-[#0077B5]/10"
   },
   {
     name: "GitHub",
     icon: <Github className="w-6 h-6" />,
-    href: "https://github.com/your-username",
+    href: "https://github.com/Pawandeep16",
     color: "hover:text-[#333] dark:hover:text-white",
     bgColor: "hover:bg-slate-100 dark:hover:bg-slate-800"
   },
   {
     name: "Instagram",
     icon: <Instagram className="w-6 h-6" />,
-    href: "https://instagram.com/your-handle",
+    href: "https://www.instagram.com/thandipawandeep16",
     color: "hover:text-[#E4405F]",
     bgColor: "hover:bg-[#E4405F]/10"
   }
 ]
 
-export  function Contact() {
+export function Contact() {
   return (
     <section className="min-h-screen flex flex-col pt-20 relative overflow-hidden">
       {/* Background */}
@@ -52,8 +52,8 @@ export  function Contact() {
               Get in Touch
             </h1>
             <p className="text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mb-8">
-              Have a project in mind or want to collaborate? I'd love to hear from you.
-              Fill out the form below and I'll get back to you as soon as possible.
+              Have a project in mind or want to collaborate? I&rsquo;d love to hear from you.
+              Fill out the form below and I&rsquo;ll get back to you as soon as possible.
             </p>
 
             {/* Contact Info Cards */}
@@ -63,13 +63,13 @@ export  function Contact() {
                   icon: <Mail className="w-8 h-8" />,
                   title: "Email",
                   info: "thandipawandeep@gmail.com",
-                  action: () => window.location.href = 'mailto:thandipawandeep@gmaill.com'
+                  action: () => window.location.href = 'mailto:thandipawandeep@gmail.com'
                 },
                 {
                   icon: <Phone className="w-8 h-8" />,
                   title: "Phone",
                   info: "+1 (416) 884-0993",
-                    action: () => window.location.href = 'tel:+14168840993'
+                  action: () => window.location.href = 'tel:+14168840993'
                 },
                 {
                   icon: <MapPin className="w-8 h-8" />,
