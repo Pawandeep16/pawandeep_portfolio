@@ -1,112 +1,70 @@
-// "use client"
-
-// import { motion } from "framer-motion"
-// import Image from "next/image"
-// import { Quote, Linkedin } from "lucide-react"
-
-
-
-// export function Testimonials() {
-//   return (
-//     <section id="testimonials" className="py-20">
-//       <div className="container mx-auto px-4">
-//         <motion.div
-//           initial={{ opacity: 0, y: 20 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           viewport={{ once: true }}
-//           className="text-center mb-12"
-//         >
-//           <h2 className="text-3xl font-bold mb-4">Client Testimonials</h2>
-//           <p className="text-muted-foreground max-w-2xl mx-auto">
-//             What people say about working with me.
-//           </p>
-//         </motion.div>
-
-//         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-//           {testimonials.map((testimonial, index) => (
-//             <motion.div
-//               key={testimonial.name}
-//               initial={{ opacity: 0, y: 20 }}
-//               whileInView={{ opacity: 1, y: 0 }}
-//               viewport={{ once: true }}
-//               transition={{ delay: index * 0.2 }}
-//               className="bg-card p-6 rounded-lg shadow-lg relative"
-//             >
-//               <Quote className="absolute top-6 right-6 w-8 h-8 text-primary/20" />
-//               <div className="flex items-center gap-4 mb-4">
-//                 <div className="relative w-12 h-12 rounded-full overflow-hidden">
-//                   <Image
-//                     src={testimonial.image}
-//                     alt={testimonial.name}
-//                     fill
-//                     className="object-cover"
-//                   />
-//                 </div>
-//                 <div>
-//                   <h3 className="font-semibold">{testimonial.name}  {testimonial.linkedin && (
-//                 <a
-//                   href={testimonial.linkedin}
-//                   target="_blank"
-//                   rel="noopener noreferrer"
-//                   className=" ml-3 inline-flex items-center gap-2 text-blue-600 hover:underline text-sm font-medium"
-//                 >
-//                   <Linkedin className="w-4 h-4" />
-                 
-//                 </a>
-//               )}</h3>
-//                   <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-//                 </div>
-//               </div>
-//               <p className="text-muted-foreground mb-4">{testimonial.content}</p>
-            
-//             </motion.div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   )
-// }
-
-
 "use client"
 
 import { motion, useScroll, useTransform } from "framer-motion"
 import Image from "next/image"
 import { Quote, Star } from "lucide-react"
-import { useRef } from "react"
-
-const testimonials = [
-  {
-    name: "Sukhjit Singh Ahluwalia",
-    role: "Professor Glasgow Caledonian University",
-    image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1748397217/Testomonials/gxvktgcfk3zd5zkjv5bo.jpg",
-    content: "Working with Pawandeep was an absolute pleasure. Their attention to detail and creative solutions helped transform our vision into reality.",
-    linkedin: "https://www.linkedin.com/in/sukhforchange/"
-  },
-  {
-    name: "Manjodh Singh Saran",
-    role: "SDE @CBC - MERN",
-    image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1748397217/Testomonials/d7kk9dytffu3tz78mrt8.jpg",
-    content: "Exceptional design skills and a great eye for aesthetics. Pawandeep consistently delivered beyond our expectations.",
-    linkedin: "https://www.linkedin.com/in/manjodh-saran/"
-  },
-  {
-    name: "Pooja Rani",
-    role: "Executive @ Honda",
-    image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1748397217/Testomonials/m788edggvywqdbxvfhfu.jpg",
-    content: "A talented developer who brings both technical expertise and creative flair to every project. It was a joy collaborating with them.",
-    linkedin: "https://www.linkedin.com/in/pooja-rani-1810/"
-  }
-]
+import { useRef, useEffect, useState } from "react"
+import { client, TESTIMONIALS_QUERY, urlFor } from '@/lib/sanity'
+import { Testimonial } from '@/lib/types'
 
 export function Testimonials() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const [loading, setLoading] = useState(true)
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"]
   })
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100])
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const data = await client.fetch(TESTIMONIALS_QUERY)
+        setTestimonials(data)
+      } catch (error) {
+        console.error('Error fetching testimonials:', error)
+        // Fallback data
+        setTestimonials([
+          {
+            _id: '1',
+            name: "Sarah Johnson",
+            role: "CEO",
+            company: "TechStart Inc.",
+            content: "Working with Pawandeep was an absolute pleasure. Their attention to detail and creative solutions helped transform our vision into reality. The project exceeded all our expectations.",
+            rating: 5,
+            image: null,
+            order: 1
+          }
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTestimonials()
+  }, [])
+
+  if (loading) {
+    return (
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-pink-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-pink-950/30" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mb-6 max-w-md mx-auto" />
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse max-w-2xl mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-80 bg-gray-200 dark:bg-gray-700 rounded-3xl animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section ref={containerRef} className="py-20 relative overflow-hidden">
@@ -141,7 +99,7 @@ export function Testimonials() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <motion.div
-              key={testimonial.name}
+              key={testimonial._id}
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -168,12 +126,20 @@ export function Testimonials() {
                 {/* Author */}
                 <div className="flex items-center gap-4">
                   <div className="relative w-16 h-16 rounded-full overflow-hidden ring-2 ring-pink-500/20">
-                    <Image
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      fill
-                      className="object-cover"
-                    />
+                    {testimonial.image ? (
+                      <Image
+                        src={urlFor(testimonial.image).url()}
+                        alt={testimonial.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-pink-200 to-purple-300 dark:from-pink-700 dark:to-purple-800 flex items-center justify-center">
+                        <span className="text-white font-bold text-xl">
+                          {testimonial.name.charAt(0)}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <div>
                     <h3 className="font-bold text-slate-900 dark:text-white">

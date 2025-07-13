@@ -1,195 +1,137 @@
-// "use client";
+// "use client"
 
-// import { motion } from "framer-motion";
-// import Image from "next/image";
-// import { Button } from "@/components/ui/button";
-// import { ExternalLink, Github } from "lucide-react";
+// import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
+// import Image from "next/image"
+// import { Button } from "@/components/ui/button"
+// import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react"
+// import { useState, useEffect, useRef } from "react"
 
+// type Project = {
+//   title: string;
+//   description: string;
+//   image: string;
+//   tags: string[];
+//   liveUrl: string;
+//   githubUrl: string;
+//   gradient: string;
+// };
 
-
-// export function Projects() {
-//   return (
-//     <section id="projects" className="py-20 bg-muted/50">
-//       <div className="container mx-auto px-4">
-//         <motion.div
-//           initial={{ opacity: 0, y: 20 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           viewport={{ once: true }}
-//           className="text-center mb-12"
-//         >
-//           <h2 className="text-3xl font-bold mb-4">Featured Projects</h2>
-//           <p className="text-muted-foreground max-w-2xl mx-auto">
-//             A selection of my recent work and personal projects.
-//           </p>
-//         </motion.div>
-
-//         <div className="overflow-x-auto">
-//           <motion.div
-//             className="flex gap-6"
-//             initial="hidden"
-//             animate="visible"
-//             variants={{
-//               hidden: { opacity: 0 },
-//               visible: { opacity: 1, transition: { staggerChildren: 0.2 } },
-//             }}
-//           >
-//             {projects.map((project) => (
-//               <motion.div
-//                 key={project.title}
-//                 className="bg-card rounded-lg overflow-hidden shadow-lg flex-shrink-0 w-80"
-//                 variants={{
-//                   hidden: { opacity: 0, x: 100 },
-//                   visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
-//                 }}
-//               >
-//                 <div className="relative h-48">
-//                   <Image
-//                     src={project.image}
-//                     alt={project.title}
-//                     fill
-//                     className="object-cover"
-//                   />
-//                 </div>
-//                 <div className="p-6">
-//                   <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-//                   <p className="text-muted-foreground mb-4">{project.description}</p>
-//                   <div className="flex flex-wrap gap-2 mb-4">
-//                     {project.tags.map((tag) => (
-//                       <span
-//                         key={tag}
-//                         className="bg-primary/10 text-primary text-sm px-2 py-1 rounded"
-//                       >
-//                         {tag}
-//                       </span>
-//                     ))}
-//                   </div>
-//                   <div className="flex gap-4">
-//                     <Button variant="outline" size="sm" asChild>
-//                       <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-//                         <ExternalLink className="w-4 h-4 mr-2" />
-//                         Live Demo
-//                       </a>
-//                     </Button>
-//                     <Button variant="outline" size="sm" asChild>
-//                       <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-//                         <Github className="w-4 h-4 mr-2" />
-//                         Code
-//                       </a>
-//                     </Button>
-//                   </div>
-//                 </div>
-//               </motion.div>
-//             ))}
-//           </motion.div>
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
+// const projects: Project[] = [
+//   {
+//     title: "Covid-19 Tracker",
+//     description: "A full-stack e-commerce solution with real-time inventory management.",
+//     image: "https://cdn.leonardo.ai/users/46b1b318-d8a6-4668-9037-68754ff6aa5f/generations/68bf48ce-c506-4604-98fc-408a76020c05/Leonardo_Phoenix_09_Create_a_vibrant_and_informative_thumbnail_3.jpg",
+//     tags: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma"],
+//     liveUrl: "https://tracker-6f237.web.app/",
+//     githubUrl: "https://github.com/Pawandeep16",
+//     gradient: "from-purple-500 to-pink-500",
+//   },
+//   {
+//     title: "Advanced Analysis Tool",
+//     description: "A modern portfolio website with dark mode and animations.",
+//     image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736621325/advanced_analysis_tool_aciwiy.webp",
+//     tags: ["React", "Framer Motion", "Tailwind CSS"],
+//     liveUrl: "https://doc-analysis-tool.vercel.app/",
+//     githubUrl: "https://github.com/Docinsight-Devs/advanced_legal_doc_analysis_tool/tree/production",
+//     gradient: "from-blue-500 to-indigo-500",
+//   },
+//   {
+//     title: "Portfolio Website",
+//     description: "A modern portfolio website with dark mode and animations.",
+//     image: "https://static.vecteezy.com/system/resources/previews/011/537/749/non_2x/people-work-portfolio-concept-for-website-template-landing-homepage-with-modern-isometric-flat-free-vector.jpg",
+//     tags: ["React", "Framer Motion", "Tailwind CSS"],
+//     liveUrl: "#",
+//     githubUrl: "https://github.com/Pawandeep16",
+//     gradient: "from-sky-500 to-cyan-500",
+//   },
+//   {
+//     title: "Amazon Clone",
+//     description: "A Full Stack Application which is the Replica of the Amazon.",
+//     image: "https://gradblog.schulich.yorku.ca/wp-content/uploads/2018/08/Amazon.png",
+//     tags: ["React", "Node.js", "Firebase", "Socket.io", "Ant Icons"],
+//     liveUrl: "https://amazoon-1325.web.app/",
+//     githubUrl: "https://github.com/Pawandeep16",
+//     gradient: "from-yellow-500 to-orange-500",
+//   },
+//   {
+//     title: "ERP Next - Educational Institute Application",
+//     description: "A Full Stack Application for educational institutions with real-time features.",
+//     image: "https://cdn.leonardo.ai/users/46b1b318-d8a6-4668-9037-68754ff6aa5f/generations/ea9070d1-fb7b-42e3-9211-e2f545f0c068/Leonardo_Phoenix_09_A_modern_and_sleek_realtime_chat_app_inter_2.jpg?w=512",
+//     tags: ["React", "Node.js", "Firebase", "Socket.io", "Ant Icons"],
+//     liveUrl: "https://chaterr.netlify.app/",
+//     githubUrl: "https://github.com/Pawandeep16",
+//     gradient: "from-green-400 to-teal-500",
+//   },
+//   {
+//     title: "Event Notifier - College Project",
+//     description: "Manage college events efficiently with real-time notifications.",
+//     image: "https://cdn.leonardo.ai/users/46b1b318-d8a6-4668-9037-68754ff6aa5f/generations/ea9070d1-fb7b-42e3-9211-e2f545f0c068/Leonardo_Phoenix_09_A_modern_and_sleek_realtime_chat_app_inter_2.jpg?w=512",
+//     tags: ["React", "Node.js", "Firebase", "Socket.io", "Ant Icons"],
+//     liveUrl: "https://chaterr.netlify.app/",
+//     githubUrl: "https://github.com/Pawandeep16/Major-Project-EventManager",
+//     gradient: "from-pink-400 to-rose-500",
+//   },
+//   {
+//     title: "Real Time Chat App",
+//     description: "Chat with friends in real-time using web sockets.",
+//     image: "https://cdn.leonardo.ai/users/46b1b318-d8a6-4668-9037-68754ff6aa5f/generations/ea9070d1-fb7b-42e3-9211-e2f545f0c068/Leonardo_Phoenix_09_A_modern_and_sleek_realtime_chat_app_inter_2.jpg?w=512",
+//     tags: ["React", "Node.js", "Firebase", "Socket.io", "Ant Icons"],
+//     liveUrl: "https://chaterr.netlify.app/",
+//     githubUrl: "https://github.com/Pawandeep16",
+//     gradient: "from-indigo-500 to-violet-600",
+//   },
+//   {
+//     title: "Notes App",
+//     description: "Take notes and collaborate with others in real-time.",
+//     image: "https://i0.wp.com/highschool.latimes.com/wp-content/uploads/2019/01/45692459364_2d91368a04_z.jpg?fit=640%2C427&ssl=1",
+//     tags: ["React", "Node.js", "MongoDB", "Socket.io"],
+//     liveUrl: "https://gne-notes.web.app/",
+//     githubUrl: "https://github.com/Pawandeep16",
+//     gradient: "from-cyan-400 to-blue-500",
+//   },
+//   {
+//     title: "Disney Clone",
+//     description: "A Disney+ UI clone with media streaming features.",
+//     image: "https://i0.wp.com/highschool.latimes.com/wp-content/uploads/2019/01/45692459364_2d91368a04_z.jpg?fit=640%2C427&ssl=1",
+//     tags: ["React", "Node.js", "MongoDB", "Socket.io"],
+//     liveUrl: "https://gne-notes.web.app/",
+//     githubUrl: "https://github.com/Pawandeep16/disneyClone",
+//     gradient: "from-blue-600 to-sky-500",
+//   },
+//   {
+//     title: "LinkedIn Clone",
+//     description: "Connect professionally with LinkedIn UI functionality.",
+//     image: "https://media.licdn.com/dms/image/D5612AQH_wBNAqIO3Lw/article-cover_image-shrink_720_1280/0/1685507296579?e=2147483647&v=beta&t=DcNhosKbQ_jI50J-8BA8YLLWL6rfGfutaAQ3t6I9c2U",
+//     tags: ["React", "Node.js", "MongoDB", "Socket.io"],
+//     liveUrl: "https://gne-notes.web.app/",
+//     githubUrl: "https://github.com/Pawandeep16/LinkedIn-Clone",
+//     gradient: "from-blue-800 to-cyan-700",
+//   },
+//   {
+//     title: "Netflix Clone",
+//     description: "Netflix-like streaming platform UI and features.",
+//     image: "https://images.ctfassets.net/y2ske730sjqp/1aONibCke6niZhgPxuiilC/2c401b05a07288746ddf3bd3943fbc76/BrandAssets_Logos_01-Wordmark.jpg?w=940",
+//     tags: ["React", "Node.js", "MongoDB", "Socket.io"],
+//     liveUrl: "https://netflix-34510.web.app/",
+//     githubUrl: "https://github.com/Pawandeep16/Netflix-Clone-with-React-incl.-Stripe",
+//     gradient: "from-red-500 to-yellow-500",
+//   },
+// ];
 
 
 "use client"
 
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
+import { motion, useScroll, useTransform } from "framer-motion"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
-
-const projects = [
-  {
-    title: "Covid-19 Tracker",
-    description: "A full-stack e-commerce solution with real-time inventory management.",
-    image: "https://cdn.leonardo.ai/users/46b1b318-d8a6-4668-9037-68754ff6aa5f/generations/68bf48ce-c506-4604-98fc-408a76020c05/Leonardo_Phoenix_09_Create_a_vibrant_and_informative_thumbnail_3.jpg",
-    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma"],
-    liveUrl: "https://tracker-6f237.web.app/",
-    githubUrl: "https://github.com/Pawandeep16",
-  },
-  {
-    title: "Advanced Analysis Tool",
-    description: "A modern portfolio website with dark mode and animations.",
-    image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736621325/advanced_analysis_tool_aciwiy.webp",
-    tags: ["React", "Framer Motion", "Tailwind CSS"],
-    liveUrl: "https://doc-analysis-tool.vercel.app/",
-    githubUrl: "https://github.com/Docinsight-Devs/advanced_legal_doc_analysis_tool/tree/production",
-  },
-  {
-    title: "Portfolio Website",
-    description: "A modern portfolio website with dark mode and animations.",
-    image: "https://static.vecteezy.com/system/resources/previews/011/537/749/non_2x/people-work-portfolio-concept-for-website-template-landing-homepage-with-modern-isometric-flat-free-vector.jpg",
-    tags: ["React", "Framer Motion", "Tailwind CSS"],
-    liveUrl: "#",
-    githubUrl: "https://github.com/Pawandeep16",
-  },
-  {
-    title: "Amazon Clone",
-    description: "A Full Stack Application which is the Replica of the Amazon.",
-    image: "https://gradblog.schulich.yorku.ca/wp-content/uploads/2018/08/Amazon.png",
-    tags: ["React", "Node.js", "Firebase", "Socket.io", "Ant Icons"],
-    liveUrl: "https://amazoon-1325.web.app/",
-    githubUrl: "https://github.com/Pawandeep16",
-  },
-  {
-    title: "Erp Next - Educational Institute Appplciation",
-    description: "A Full Stack Application which is the Replica of the Amazon.",
-    image: "https://cdn.leonardo.ai/users/46b1b318-d8a6-4668-9037-68754ff6aa5f/generations/ea9070d1-fb7b-42e3-9211-e2f545f0c068/Leonardo_Phoenix_09_A_modern_and_sleek_realtime_chat_app_inter_2.jpg?w=512",
-    tags: ["React", "Node.js", "Firebase", "Socket.io", "Ant Icons"],
-    liveUrl: "https://chaterr.netlify.app/",
-    githubUrl: "https://github.com/Pawandeep16",
-  },
-  {
-    title: "Event Notifier - college Project",
-    description: "A Full Stack Application which is the Replica of the Amazon.",
-    image: "https://cdn.leonardo.ai/users/46b1b318-d8a6-4668-9037-68754ff6aa5f/generations/ea9070d1-fb7b-42e3-9211-e2f545f0c068/Leonardo_Phoenix_09_A_modern_and_sleek_realtime_chat_app_inter_2.jpg?w=512",
-    tags: ["React", "Node.js", "Firebase", "Socket.io", "Ant Icons"],
-    liveUrl: "https://chaterr.netlify.app/",
-    githubUrl: "https://github.com/Pawandeep16/Major-Project-EventManager",
-  },
-  {
-    title: "Real Time Chat App",
-    description: "A Full Stack Application which is the Replica of the Amazon.",
-    image: "https://cdn.leonardo.ai/users/46b1b318-d8a6-4668-9037-68754ff6aa5f/generations/ea9070d1-fb7b-42e3-9211-e2f545f0c068/Leonardo_Phoenix_09_A_modern_and_sleek_realtime_chat_app_inter_2.jpg?w=512",
-    tags: ["React", "Node.js", "Firebase", "Socket.io", "Ant Icons"],
-    liveUrl: "https://chaterr.netlify.app/",
-    githubUrl: "https://github.com/Pawandeep16",
-  },
-  {
-    title: "Notes App",
-    description: "A collaborative task management application with real-time updates.",
-    image: "https://i0.wp.com/highschool.latimes.com/wp-content/uploads/2019/01/45692459364_2d91368a04_z.jpg?fit=640%2C427&ssl=1",
-    tags: ["React", "Node.js", "MongoDB", "Socket.io"],
-    liveUrl: "https://gne-notes.web.app/",
-    githubUrl: "https://github.com/Pawandeep16",
-  },
-  {
-    title: "Disney Clone",
-    description: "A collaborative task management application with real-time updates.",
-    image: "https://i0.wp.com/highschool.latimes.com/wp-content/uploads/2019/01/45692459364_2d91368a04_z.jpg?fit=640%2C427&ssl=1",
-    tags: ["React", "Node.js", "MongoDB", "Socket.io"],
-    liveUrl: "https://gne-notes.web.app/",
-    githubUrl: "https://github.com/Pawandeep16/disneyClone",
-  },
-  {
-    title: "Linkedin Clone",
-    description: "A collaborative task management application with real-time updates.",
-    image: "https://media.licdn.com/dms/image/D5612AQH_wBNAqIO3Lw/article-cover_image-shrink_720_1280/0/1685507296579?e=2147483647&v=beta&t=DcNhosKbQ_jI50J-8BA8YLLWL6rfGfutaAQ3t6I9c2U",
-    tags: ["React", "Node.js", "MongoDB", "Socket.io"],
-    liveUrl: "https://gne-notes.web.app/",
-    githubUrl: "https://github.com/Pawandeep16/LinkedIn-Clone",
-  },
-  {
-    title: "Netflix Clone",
-    description: "A collaborative task management application with real-time updates.",
-    image: "https://images.ctfassets.net/y2ske730sjqp/1aONibCke6niZhgPxuiilC/2c401b05a07288746ddf3bd3943fbc76/BrandAssets_Logos_01-Wordmark.jpg?w=940",
-    tags: ["React", "Node.js", "MongoDB", "Socket.io"],
-    liveUrl: "https://netflix-34510.web.app/",
-    githubUrl: "https://github.com/Pawandeep16/Netflix-Clone-with-React-incl.-Stripe",
-  },
-  
-  
-];
+import { client, PROJECTS_QUERY, urlFor } from '@/lib/sanity'
+import { Project } from '@/lib/types'
 
 export function Projects() {
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState(0)
   const [touchStart, setTouchStart] = useState<number | null>(null)
@@ -205,6 +147,36 @@ export function Projects() {
   const y = useTransform(scrollYProgress, [0, 1], [100, -100])
 
   const minSwipeDistance = 50
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const data = await client.fetch(PROJECTS_QUERY)
+        setProjects(data)
+      } catch (error) {
+        console.error('Error fetching projects:', error)
+        // Fallback data
+        setProjects([
+          {
+            _id: '1',
+            title: "E-commerce Platform",
+            description: "A full-stack e-commerce solution with real-time inventory management, secure payments, and an intuitive admin dashboard.",
+            image: null,
+            tags: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma", "PostgreSQL", "Stripe"],
+            liveUrl: "#",
+            githubUrl: "#",
+            gradient: "from-blue-500 to-purple-600",
+            featured: true,
+            order: 1
+          }
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProjects()
+  }, [])
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null)
@@ -259,6 +231,25 @@ export function Projects() {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
+
+  if (loading) {
+    return (
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-white to-orange-50/30 dark:from-purple-950/50 dark:via-slate-900 dark:to-orange-950/30" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mb-6 max-w-md mx-auto" />
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse max-w-2xl mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-3xl animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section ref={containerRef} className="py-20 relative overflow-hidden">
@@ -315,7 +306,7 @@ export function Projects() {
           >
             {projects.map((project, index) => (
               <motion.div
-                key={project.title}
+                key={project._id}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -323,12 +314,16 @@ export function Projects() {
                 className="apple-card group flex-shrink-0 w-96"
               >
                 <div className="relative h-48 overflow-hidden rounded-t-3xl">
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
+                  {project.image ? (
+                    <Image
+                      src={urlFor(project.image).url()}
+                      alt={project.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800" />
+                  )}
                   <div className={`absolute inset-0 bg-gradient-to-t ${project.gradient} opacity-20`} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </div>
@@ -355,14 +350,18 @@ export function Projects() {
                     )}
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm" className={`bg-gradient-to-r ${project.gradient} text-white flex-1`}>
-                      <ExternalLink className="w-3 h-3 mr-1" />
-                      Demo
-                    </Button>
-                    <Button variant="outline" size="sm" className="flex-1">
-                      <Github className="w-3 h-3 mr-1" />
-                      Code
-                    </Button>
+                    {project.liveUrl && (
+                      <Button size="sm" className={`bg-gradient-to-r ${project.gradient} text-white flex-1`}>
+                        <ExternalLink className="w-3 h-3 mr-1" />
+                        Demo
+                      </Button>
+                    )}
+                    {project.githubUrl && (
+                      <Button variant="outline" size="sm" className="flex-1">
+                        <Github className="w-3 h-3 mr-1" />
+                        Code
+                      </Button>
+                    )}
                   </div>
                 </div>
               </motion.div>
@@ -410,24 +409,28 @@ export function Projects() {
             >
               <div className="apple-card h-full">
                 <div className="relative h-56 overflow-hidden rounded-t-3xl">
-                  <Image
-                    src={projects[currentIndex].image}
-                    alt={projects[currentIndex].title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${projects[currentIndex].gradient} opacity-20`} />
+                  {projects[currentIndex]?.image ? (
+                    <Image
+                      src={urlFor(projects[currentIndex].image).url()}
+                      alt={projects[currentIndex].title}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800" />
+                  )}
+                  <div className={`absolute inset-0 bg-gradient-to-t ${projects[currentIndex]?.gradient} opacity-20`} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">
-                    {projects[currentIndex].title}
+                    {projects[currentIndex]?.title}
                   </h3>
                   <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
-                    {projects[currentIndex].description}
+                    {projects[currentIndex]?.description}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {projects[currentIndex].tags.map((tag) => (
+                    {projects[currentIndex]?.tags.map((tag) => (
                       <span
                         key={tag}
                         className="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm rounded-full"
@@ -437,14 +440,18 @@ export function Projects() {
                     ))}
                   </div>
                   <div className="flex gap-3">
-                    <Button className={`bg-gradient-to-r ${projects[currentIndex].gradient} text-white flex-1`}>
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Live Demo
-                    </Button>
-                    <Button variant="outline" className="flex-1">
-                      <Github className="w-4 h-4 mr-2" />
-                      View Code
-                    </Button>
+                    {projects[currentIndex]?.liveUrl && (
+                      <Button className={`bg-gradient-to-r ${projects[currentIndex]?.gradient} text-white flex-1`}>
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Live Demo
+                      </Button>
+                    )}
+                    {projects[currentIndex]?.githubUrl && (
+                      <Button variant="outline" className="flex-1">
+                        <Github className="w-4 h-4 mr-2" />
+                        View Code
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>

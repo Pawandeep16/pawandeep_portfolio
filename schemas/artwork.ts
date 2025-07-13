@@ -26,29 +26,37 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'category',
+      name: 'categories',  // plural for clarity
       title: 'Categories',
       type: 'array',
-      of: [{ type: 'string' }],
-      options: {
-        list: [
-          { title: 'Digital Art', value: 'digital-art' },
-          { title: 'Photography', value: 'photography' },
-          { title: 'Illustration', value: 'illustration' },
-          { title: 'UI/UX Design', value: 'ui-ux' },
-          { title: 'Branding', value: 'branding' },
-          { title: 'Web Design', value: 'web-design' },
-          { title: 'Print Design', value: 'print-design' },
-          { title: 'Motion Graphics', value: 'motion-graphics' },
-        ],
-      },
+      of: [
+        defineField({
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Digital Art', value: 'digital-art' },
+              { title: 'Photography', value: 'photography' },
+              { title: 'Illustration', value: 'illustration' },
+              { title: 'UI/UX Design', value: 'ui-ux' },
+              { title: 'Branding', value: 'branding' },
+              { title: 'Web Design', value: 'web-design' },
+              { title: 'Print Design', value: 'print-design' },
+              { title: 'Motion Graphics', value: 'motion-graphics' },
+            ],
+          },
+        }),
+      ],
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',
-      of: [{ type: 'string' }],
+      of: [
+        defineField({
+          type: 'string',
+        }),
+      ],
     }),
     defineField({
       name: 'year',
@@ -65,7 +73,11 @@ export default defineType({
       name: 'tools',
       title: 'Tools Used',
       type: 'array',
-      of: [{ type: 'string' }],
+      of: [
+        defineField({
+          type: 'string',
+        }),
+      ],
     }),
     defineField({
       name: 'featured',

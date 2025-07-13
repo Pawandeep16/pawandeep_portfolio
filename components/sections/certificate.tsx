@@ -1,243 +1,3 @@
-// "use client"
-
-// import { motion, AnimatePresence } from "framer-motion"
-// import { Award, ChevronLeft, ChevronRight, X } from "lucide-react"
-// import { useState, useEffect } from "react"
-// import Image from "next/image"
-// import { Button } from "@/components/ui/button"
-
-// const certificates = [
-//   {
-//     title: "Advanced Web Development",
-//     issuer: "Guru Nanak Dev Engineering College",
-//     date: "2021",
-//     description: "Developed advanced skills in designing and building dynamic web applications, focusing on both frontend and backend systems. Gained proficiency in deploying applications on various platforms for optimal performance.",
-//     image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625382/guru_nanak_dev_engineering_technology_certificate_full_stack_mvq8yu.webp",
-//     badgeColor: "bg-[#FF9900]/10 text-[#FF9900]"
-//   },
-//   {
-//     title: "Android App Development",
-//     issuer: "Internshala",
-//     date: "2021",
-//     description: "Completed a comprehensive course in Android App Development, demonstrating expertise in building user-friendly and efficient Android applications. Proficient in Java and Kotlin, with experience in deploying apps to the Google Play Store.",
-//     image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625382/Android_app_Developemnt_tfhy1h.webp",
-//     badgeColor: "bg-[#4285F4]/10 text-[#4285F4]"
-//   },
-//   {
-//     title: "Java Development Training",
-//     issuer: "IIT Bombay",
-//     date: "2021",
-//     description: "Gained in-depth knowledge of Java programming and object-oriented design principles. Focused on developing efficient Java applications, with experience in working with Java-based frameworks and libraries.",
-//     image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625824/java_u2ssxm.webp",
-//     badgeColor: "bg-[#00A4EF]/10 text-[#00A4EF]"
-//   },
-//   {
-//     title: "Latex Training",
-//     issuer: "IIT Bombay",
-//     date: "2021",
-//     description: "Acquired specialized skills in LaTeX, a typesetting system widely used for technical and scientific documents. Mastered advanced formatting techniques to create professional-looking research papers, articles, and presentations.",
-//     image: "https://res.cloudinary.com/dpjsyk9yu/image/upload/v1736625958/latex_yhm6wz.webp",
-//     badgeColor: "bg-[#00A4EF]/10 text-[#00A4EF]"
-//   }
-// ]
-
-// export function Certifications() {
-//   const [currentIndex, setCurrentIndex] = useState(0)
-//   const [selectedImage, setSelectedImage] = useState<string | null>(null)
-//   const [direction, setDirection] = useState(0)
-
-//   const handlePrevious = () => {
-//     setDirection(-1)
-//     setCurrentIndex((prev) => (prev === 0 ? certificates.length - 1 : prev - 1))
-//   }
-
-//   const handleNext = () => {
-//     setDirection(1)
-//     setCurrentIndex((prev) => (prev === certificates.length - 1 ? 0 : prev + 1))
-//   }
-
-//   useEffect(() => {
-//     const handleKeyDown = (e: KeyboardEvent) => {
-//       if (selectedImage) {
-//         if (e.key === 'Escape') setSelectedImage(null)
-//       } else {
-//         if (e.key === 'ArrowLeft') handlePrevious()
-//         if (e.key === 'ArrowRight') handleNext()
-//       }
-//     }
-
-//     window.addEventListener('keydown', handleKeyDown)
-//     return () => window.removeEventListener('keydown', handleKeyDown)
-//   }, [selectedImage])
-
-//   const slideVariants = {
-//     enter: (direction: number) => ({
-//       x: direction > 0 ? 1000 : -1000,
-//       opacity: 0,
-//       scale: 0.8,
-//     }),
-//     center: {
-//       zIndex: 1,
-//       x: 0,
-//       opacity: 1,
-//       scale: 1,
-//     },
-//     exit: (direction: number) => ({
-//       zIndex: 0,
-//       x: direction < 0 ? 1000 : -1000,
-//       opacity: 0,
-//       scale: 0.8,
-//     }),
-//   }
-
-//   return (
-//     <section className="py-20 overflow-hidden">
-//       <div className="container mx-auto px-4">
-//         <motion.div
-//           initial={{ opacity: 0, y: 20 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           viewport={{ once: true }}
-//           className="text-center mb-12"
-//         >
-//           <h2 className="text-3xl font-bold mb-4">Certifications</h2>
-//           <p className="text-muted-foreground max-w-2xl mx-auto">
-//             Professional certifications and achievements in technology and development.
-//           </p>
-//         </motion.div>
-
-//         <div className="relative max-w-3xl mx-auto">
-//           <div className="absolute inset-y-0 -left-20 flex items-center">
-//             <Button
-//               variant="ghost"
-//               size="icon"
-//               className="hover:bg-background/80 hover:text-primary transition-colors"
-//               onClick={handlePrevious}
-//             >
-//               <ChevronLeft className="w-8 h-8" />
-//             </Button>
-//           </div>
-
-//           <div className="absolute inset-y-0 -right-20 flex items-center">
-//             <Button
-//               variant="ghost"
-//               size="icon"
-//               className="hover:bg-background/80 hover:text-primary transition-colors"
-//               onClick={handleNext}
-//             >
-//               <ChevronRight className="w-8 h-8" />
-//             </Button>
-//           </div>
-
-//           <div className="relative h-[500px] overflow-hidden">
-//             <AnimatePresence initial={false} custom={direction}>
-//               <motion.div
-//                 key={currentIndex}
-//                 custom={direction}
-//                 variants={slideVariants}
-//                 initial="enter"
-//                 animate="center"
-//                 exit="exit"
-//                 transition={{
-//                   x: { type: "spring", stiffness: 300, damping: 30 },
-//                   opacity: { duration: 0.2 },
-//                   scale: { duration: 0.4 }
-//                 }}
-//                 className="absolute inset-0"
-//               >
-//                 <div className="bg-card rounded-lg overflow-hidden shadow-lg border border-border/50 h-full">
-//                   <div 
-//                     className="relative h-64 cursor-pointer"
-//                     onClick={() => setSelectedImage(certificates[currentIndex].image)}
-//                   >
-//                     <Image
-//                       src={certificates[currentIndex].image}
-//                       alt={certificates[currentIndex].title}
-//                       fill
-//                       className="object-cover transition-transform duration-300 hover:scale-105"
-//                     />
-//                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-//                     <div className="absolute bottom-4 left-4">
-//                       <span className={`inline-block px-2 py-1 rounded-md text-sm ${certificates[currentIndex].badgeColor}`}>
-//                         {certificates[currentIndex].issuer}
-//                       </span>
-//                     </div>
-//                   </div>
-//                   <div className="p-8">
-//                     <div className="flex items-center gap-2 mb-4">
-//                       <Award className="w-6 h-6 text-primary" />
-//                       <h3 className="text-xl font-semibold">{certificates[currentIndex].title}</h3>
-//                     </div>
-//                     <p className="text-muted-foreground text-lg mb-6">{certificates[currentIndex].description}</p>
-//                     <div className="text-sm text-muted-foreground">
-//                       Issued: {certificates[currentIndex].date}
-//                     </div>
-//                   </div>
-//                 </div>
-//               </motion.div>
-//             </AnimatePresence>
-//           </div>
-
-//           <div className="flex justify-center mt-8 gap-2">
-//             {certificates.map((_, index) => (
-//               <button
-//                 key={index}
-//                 onClick={() => {
-//                   setDirection(index > currentIndex ? 1 : -1)
-//                   setCurrentIndex(index)
-//                 }}
-//                 className="p-1"
-//               >
-//                 <div
-//                   className={`w-8 h-2 rounded-full transition-colors ${
-//                     index === currentIndex
-//                       ? "bg-primary"
-//                       : "bg-primary/20"
-//                   }`}
-//                 />
-//               </button>
-//             ))}
-//           </div>
-//         </div>
-//       </div>
-
-//       <AnimatePresence>
-//         {selectedImage && (
-//           <motion.div
-//             initial={{ opacity: 0 }}
-//             animate={{ opacity: 1 }}
-//             exit={{ opacity: 0 }}
-//             className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm"
-//             onClick={() => setSelectedImage(null)}
-//           >
-//             <motion.div
-//               initial={{ scale: 0.9 }}
-//               animate={{ scale: 1 }}
-//               exit={{ scale: 0.9 }}
-//               className="relative max-w-4xl w-full mx-4"
-//               onClick={e => e.stopPropagation()}
-//             >
-//               <button
-//                 onClick={() => setSelectedImage(null)}
-//                 className="absolute -top-12 right-0 text-foreground hover:text-primary transition-colors"
-//               >
-//                 <X className="w-6 h-6" />
-//               </button>
-//               <div className="relative aspect-video rounded-lg overflow-hidden">
-//                 <Image
-//                   src={selectedImage}
-//                   alt="Certificate"
-//                   fill
-//                   className="object-contain"
-//                   priority
-//                 />
-//               </div>
-//             </motion.div>
-//           </motion.div>
-//         )}
-//       </AnimatePresence>
-//     </section>
-//   )
-// }
 "use client"
 
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
@@ -245,61 +5,12 @@ import { Award, ChevronLeft, ChevronRight, X, ExternalLink } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-
-const certificates = [
-  {
-    title: "AWS Certified Solutions Architect",
-    issuer: "Amazon Web Services",
-    date: "2023",
-    description: "Expertise in designing distributed systems and deploying applications on AWS infrastructure with focus on scalability, security, and cost optimization.",
-    image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&h=600&fit=crop",
-    badgeColor: "bg-[#FF9900]/10 text-[#FF9900]",
-    gradient: "from-orange-500 to-yellow-500",
-    skills: ["AWS EC2", "S3", "Lambda", "CloudFormation", "VPC", "IAM"]
-  },
-  {
-    title: "Google Cloud Professional",
-    issuer: "Google Cloud",
-    date: "2023",
-    description: "Advanced knowledge in cloud architecture and Google Cloud Platform services including compute, storage, networking, and machine learning.",
-    image: "https://images.unsplash.com/photo-1481487196290-c152efe083f5?w=800&h=600&fit=crop",
-    badgeColor: "bg-[#4285F4]/10 text-[#4285F4]",
-    gradient: "from-blue-500 to-cyan-500",
-    skills: ["GCP Compute", "BigQuery", "Kubernetes", "Cloud Functions", "Pub/Sub", "AI/ML"]
-  },
-  {
-    title: "Azure Solutions Expert",
-    issuer: "Microsoft",
-    date: "2022",
-    description: "Specialized in Microsoft Azure cloud services and solutions architecture with emphasis on hybrid cloud environments and enterprise integration.",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=600&fit=crop",
-    badgeColor: "bg-[#00A4EF]/10 text-[#00A4EF]",
-    gradient: "from-blue-600 to-indigo-600",
-    skills: ["Azure VMs", "App Service", "Azure SQL", "Active Directory", "DevOps", "ARM Templates"]
-  },
-  {
-    title: "React Native Specialist",
-    issuer: "Meta",
-    date: "2023",
-    description: "Expert-level proficiency in React Native development for cross-platform mobile applications with performance optimization.",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop",
-    badgeColor: "bg-[#61DAFB]/10 text-[#61DAFB]",
-    gradient: "from-cyan-500 to-blue-500",
-    skills: ["React Native", "Redux", "TypeScript", "Expo", "Native Modules", "Performance"]
-  },
-  {
-    title: "Kubernetes Administrator",
-    issuer: "Cloud Native Computing Foundation",
-    date: "2022",
-    description: "Certified in Kubernetes cluster administration, container orchestration, and cloud-native application deployment.",
-    image: "https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&h=600&fit=crop",
-    badgeColor: "bg-[#326CE5]/10 text-[#326CE5]",
-    gradient: "from-blue-600 to-purple-600",
-    skills: ["Kubernetes", "Docker", "Helm", "Istio", "Monitoring", "Security"]
-  }
-]
+import { client, CERTIFICATIONS_QUERY, urlFor } from '@/lib/sanity'
+import { Certification } from '@/lib/types'
 
 export function Certifications() {
+  const [certificates, setCertificates] = useState<Certification[]>([])
+  const [loading, setLoading] = useState(true)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [direction, setDirection] = useState(0)
@@ -315,6 +26,35 @@ export function Certifications() {
   const y = useTransform(scrollYProgress, [0, 1], [100, -100])
 
   const minSwipeDistance = 50
+
+  useEffect(() => {
+    const fetchCertifications = async () => {
+      try {
+        const data = await client.fetch(CERTIFICATIONS_QUERY)
+        setCertificates(data)
+      } catch (error) {
+        console.error('Error fetching certifications:', error)
+        // Fallback data
+        setCertificates([
+          {
+            _id: '1',
+            title: "AWS Certified Solutions Architect",
+            issuer: "Amazon Web Services",
+            date: "2023",
+            description: "Expertise in designing distributed systems and deploying applications on AWS infrastructure with focus on scalability, security, and cost optimization.",
+            image: null,
+            badgeColor: "bg-[#FF9900]/10 text-[#FF9900]",
+            gradient: "from-orange-500 to-yellow-500",
+            skills: ["AWS EC2", "S3", "Lambda", "CloudFormation", "VPC", "IAM"]
+          }
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCertifications()
+  }, [])
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null)
@@ -382,6 +122,25 @@ export function Certifications() {
     }),
   }
 
+  if (loading) {
+    return (
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-orange-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-orange-950/30" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mb-6 max-w-md mx-auto" />
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse max-w-2xl mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-3xl animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section ref={containerRef} className="py-20 relative overflow-hidden">
       {/* Background */}
@@ -417,21 +176,25 @@ export function Certifications() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {certificates.map((cert, index) => (
               <motion.div
-                key={cert.title}
+                key={cert._id}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="apple-card group cursor-pointer"
-                onClick={() => setSelectedImage(cert.image)}
+                onClick={() => cert.image && setSelectedImage(urlFor(cert.image).url())}
               >
                 <div className="relative h-48 overflow-hidden rounded-t-3xl">
-                  <Image
-                    src={cert.image}
-                    alt={cert.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
+                  {cert.image ? (
+                    <Image
+                      src={urlFor(cert.image).url()}
+                      alt={cert.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800" />
+                  )}
                   <div className={`absolute inset-0 bg-gradient-to-t ${cert.gradient} opacity-20`} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                   <div className="absolute bottom-4 left-4">
@@ -467,8 +230,18 @@ export function Certifications() {
                       </span>
                     )}
                   </div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">
-                    Issued: {cert.date}
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs text-slate-500 dark:text-slate-400">
+                      Issued: {cert.date}
+                    </div>
+                    {cert.credentialUrl && (
+                      <Button size="sm" variant="outline" asChild>
+                        <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          View
+                        </a>
+                      </Button>
+                    )}
                   </div>
                 </div>
               </motion.div>
@@ -521,36 +294,40 @@ export function Certifications() {
                 }}
                 className="absolute inset-0"
               >
-                <div className="apple-card h-full cursor-pointer" onClick={() => setSelectedImage(certificates[currentIndex].image)}>
+                <div className="apple-card h-full cursor-pointer" onClick={() => certificates[currentIndex]?.image && setSelectedImage(urlFor(certificates[currentIndex].image).url())}>
                   <div className="relative h-56 overflow-hidden rounded-t-3xl">
-                    <Image
-                      src={certificates[currentIndex].image}
-                      alt={certificates[currentIndex].title}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-t ${certificates[currentIndex].gradient} opacity-20`} />
+                    {certificates[currentIndex]?.image ? (
+                      <Image
+                        src={urlFor(certificates[currentIndex].image).url()}
+                        alt={certificates[currentIndex].title}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800" />
+                    )}
+                    <div className={`absolute inset-0 bg-gradient-to-t ${certificates[currentIndex]?.gradient} opacity-20`} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                     <div className="absolute bottom-4 left-4">
-                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${certificates[currentIndex].badgeColor} backdrop-blur-sm`}>
-                        {certificates[currentIndex].issuer}
+                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${certificates[currentIndex]?.badgeColor} backdrop-blur-sm`}>
+                        {certificates[currentIndex]?.issuer}
                       </span>
                     </div>
                   </div>
                   <div className="p-6">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className={`p-2 rounded-xl bg-gradient-to-r ${certificates[currentIndex].gradient} text-white`}>
+                      <div className={`p-2 rounded-xl bg-gradient-to-r ${certificates[currentIndex]?.gradient} text-white`}>
                         <Award className="w-6 h-6" />
                       </div>
                       <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                        {certificates[currentIndex].title}
+                        {certificates[currentIndex]?.title}
                       </h3>
                     </div>
                     <p className="text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
-                      {certificates[currentIndex].description}
+                      {certificates[currentIndex]?.description}
                     </p>
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {certificates[currentIndex].skills.map((skill) => (
+                      {certificates[currentIndex]?.skills.map((skill) => (
                         <span
                           key={skill}
                           className="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm rounded-full"
@@ -559,8 +336,18 @@ export function Certifications() {
                         </span>
                       ))}
                     </div>
-                    <div className="text-sm text-slate-500 dark:text-slate-400">
-                      Issued: {certificates[currentIndex].date}
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm text-slate-500 dark:text-slate-400">
+                        Issued: {certificates[currentIndex]?.date}
+                      </div>
+                      {certificates[currentIndex]?.credentialUrl && (
+                        <Button size="sm" variant="outline" asChild>
+                          <a href={certificates[currentIndex].credentialUrl} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            View
+                          </a>
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>

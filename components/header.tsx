@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
+// Fix: Make your Button support motion props
+const MotionButton = motion(Button);
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -23,8 +26,9 @@ const Header = () => {
   const navItems = [
     { href: "#about", label: "About" },
     { href: "#skills", label: "Skills" },
-    { href: "#projects", label: "Projects" },
     { href: "#education", label: "Education" },
+    { href: "#experience", label: "Experience" },
+    { href: "#projects", label: "Projects" },
     { href: "#certifications", label: "Certifications" },
     { href: "#testimonials", label: "Testimonials" },
     { href: "#contact", label: "Contact" },
@@ -102,7 +106,7 @@ const Header = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.9 }}
             >
-              <Button
+              <MotionButton
                 onClick={downloadResume}
                 className="btn-primary"
                 whileHover={{ scale: 1.05 }}
@@ -110,7 +114,7 @@ const Header = () => {
               >
                 <Download className="w-4 h-4 mr-2" />
                 Resume
-              </Button>
+              </MotionButton>
             </motion.div>
           </div>
 
@@ -183,7 +187,7 @@ const Header = () => {
                   transition={{ delay: navItems.length * 0.05 + 0.1 }}
                   className="pt-4 border-t border-white/10 dark:border-gray-700/20"
                 >
-                  <Button
+                  <MotionButton
                     onClick={downloadResume}
                     className="btn-primary w-full"
                     whileHover={{ scale: 1.02 }}
@@ -191,7 +195,7 @@ const Header = () => {
                   >
                     <Download className="w-4 h-4 mr-2" />
                     Download Resume
-                  </Button>
+                  </MotionButton>
                 </motion.div>
               </nav>
             </div>

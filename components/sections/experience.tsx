@@ -2,36 +2,73 @@
 
 import { motion, useScroll, useTransform } from "framer-motion"
 import { Briefcase, Calendar, MapPin, Award } from "lucide-react"
-import { useRef } from "react"
-
-const experience = [
-  {
-    title: "IT Operations & Inventory Systems Specialist",
-    company: "GoBolt Logistics",
-    location: "Markham, Ontario",
-    period: "January 2025 – Present",
-    current: true,
-    description: "Specialized in IT operations and inventory management systems. Streamlined processes and implemented digital solutions to improve operational efficiency..",
-    achievements: ["Optimized inventory tracking system", "Reduced manual processes by 60%", "Enhanced data accuracy and reporting"]
-  },
-  {
-    title: "Full Stack Developer",
-    company: "Obsidian Glass Industry",
-    location: "Mississauga, Ontario",
-    period: "January 2025 – May 2025",
-    description: "Developing and maintaining full-stack applications for logistics and supply chain management. Working with modern technologies to optimize delivery operations and enhance user experience.",
-    achievements: ["Led development of real-time tracking system", "Improved application performance by 40%", "Implemented automated testing pipeline"]
-  }
-]
+import { useRef, useEffect, useState } from "react"
+import { client, EXPERIENCE_QUERY } from '@/lib/sanity'
+import { Experience as ExperienceType } from '@/lib/types'
 
 export function Experience() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [experience, setExperience] = useState<ExperienceType[]>([])
+  const [loading, setLoading] = useState(true)
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"]
   })
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100])
+
+  useEffect(() => {
+    const fetchExperience = async () => {
+      try {
+        const data = await client.fetch(EXPERIENCE_QUERY)
+        setExperience(data)
+      } catch (error) {
+        console.error('Error fetching experience:', error)
+        // Fallback data
+        setExperience([
+          {
+            _id: '1',
+            title: "Full Stack Developer",
+            company: "GoBolt Logistics",
+            location: "Markham, Ontario",
+            startDate: "2025-01-01",
+            current: true,
+            description: "Developing and maintaining full-stack applications for logistics and supply chain management. Working with modern technologies to optimize delivery operations and enhance user experience.",
+            achievements: ["Led development of real-time tracking system", "Improved application performance by 40%", "Implemented automated testing pipeline"]
+          }
+        ])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchExperience()
+  }, [])
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+  }
+
+  if (loading) {
+    return (
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-purple-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-purple-950/30" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mb-6 max-w-md mx-auto" />
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse max-w-2xl mx-auto" />
+          </div>
+          <div className="max-w-4xl mx-auto space-y-8">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="h-64 bg-gray-200 dark:bg-gray-700 rounded-3xl animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section ref={containerRef} className="py-20 relative overflow-hidden">
@@ -66,7 +103,7 @@ export function Experience() {
         <div className="max-w-4xl mx-auto">
           {experience.map((exp, index) => (
             <motion.div
-              key={exp.title}
+              key={exp._id}
               initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -104,7 +141,9 @@ export function Experience() {
                         </div>
                         <div className="flex items-center gap-2">
                           <Calendar className="w-4 h-4" />
-                          <span>{exp.period}</span>
+                          <span>
+                            {formatDate(exp.startDate)} - {exp.current ? 'Present' : (exp.endDate ? formatDate(exp.endDate) : 'Present')}
+                          </span>
                         </div>
                       </div>
                       <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
@@ -112,24 +151,48 @@ export function Experience() {
                       </p>
                       
                       {/* Achievements */}
-                      <div className="flex items-center gap-2 mb-4">
-                        <Award className="w-5 h-5 text-yellow-500" />
-                        <span className="font-semibold text-slate-900 dark:text-white">Key Achievements:</span>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {exp.achievements.map((achievement, achIndex) => (
-                          <motion.span
-                            key={achievement}
-                            initial={{ opacity: 0, scale: 0 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.3, delay: achIndex * 0.1 }}
-                            className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-sm rounded-full border border-purple-200 dark:border-purple-700"
-                          >
-                            {achievement}
-                          </motion.span>
-                        ))}
-                      </div>
+                      {exp.achievements && exp.achievements.length > 0 && (
+                        <>
+                          <div className="flex items-center gap-2 mb-4">
+                            <Award className="w-5 h-5 text-yellow-500" />
+                            <span className="font-semibold text-slate-900 dark:text-white">Key Achievements:</span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {exp.achievements.map((achievement, achIndex) => (
+                              <motion.span
+                                key={achievement}
+                                initial={{ opacity: 0, scale: 0 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.3, delay: achIndex * 0.1 }}
+                                className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-sm rounded-full border border-purple-200 dark:border-purple-700"
+                              >
+                                {achievement}
+                              </motion.span>
+                            ))}
+                          </div>
+                        </>
+                      )}
+
+                      {/* Technologies */}
+                      {exp.technologies && exp.technologies.length > 0 && (
+                        <div className="mt-4">
+                          <div className="flex flex-wrap gap-2">
+                            {exp.technologies.map((tech, techIndex) => (
+                              <motion.span
+                                key={tech}
+                                initial={{ opacity: 0, scale: 0 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.3, delay: techIndex * 0.05 }}
+                                className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-full"
+                              >
+                                {tech}
+                              </motion.span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                     {exp.current && (
                       <motion.span 
