@@ -7,7 +7,13 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ['cdn.sanity.io'],  // Allow images from Sanity CDN
+    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.cdn.sanity.io',
+      },
+    ],
   },
 };
 
