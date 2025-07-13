@@ -9,13 +9,26 @@ export default defineType({
       name: 'title',
       title: 'Artwork Title',
       type: 'string',
-      validation: (Rule) => Rule.required(),
+      validation: Rule => Rule.required(),
     }),
+
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+      validation: Rule => Rule.required(),
+    }),
+
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
     }),
+
     defineField({
       name: 'image',
       title: 'Artwork Image',
@@ -23,15 +36,18 @@ export default defineType({
       options: {
         hotspot: true,
       },
-      validation: (Rule) => Rule.required(),
+      validation: Rule => Rule.required(),
     }),
+
     defineField({
-      name: 'categories',  // plural for clarity
+      name: 'categories',
       title: 'Categories',
       type: 'array',
       of: [
-        defineField({
-          type: 'string',
+        defineField
+        ({ 
+           name: 'category',
+           type: 'string',
           options: {
             list: [
               { title: 'Digital Art', value: 'digital-art' },
@@ -46,52 +62,60 @@ export default defineType({
           },
         }),
       ],
-      validation: (Rule) => Rule.required().min(1),
+      validation: Rule => Rule.required().min(1),
     }),
+
     defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',
-      of: [
-        defineField({
-          type: 'string',
-        }),
-      ],
+      of: [{ type: 'string' }],
+      options: {
+        layout: 'tags',
+      },
     }),
+
     defineField({
       name: 'year',
       title: 'Year Created',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
+      type: 'date',
+      options: {
+        dateFormat: 'YYYY',
+      },
+      validation: Rule => Rule.required(),
     }),
+
     defineField({
       name: 'client',
       title: 'Client',
       type: 'string',
     }),
+
     defineField({
       name: 'tools',
       title: 'Tools Used',
       type: 'array',
-      of: [
-        defineField({
-          type: 'string',
-        }),
-      ],
+      of: [{ type: 'string' }],
+      options: {
+        layout: 'tags',
+      },
     }),
+
     defineField({
       name: 'featured',
       title: 'Featured Artwork',
       type: 'boolean',
       initialValue: false,
     }),
+
     defineField({
       name: 'order',
       title: 'Display Order',
       type: 'number',
-      validation: (Rule) => Rule.required(),
+      validation: Rule => Rule.required(),
     }),
   ],
+
   orderings: [
     {
       title: 'Order',
