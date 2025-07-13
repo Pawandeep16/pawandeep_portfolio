@@ -62,14 +62,14 @@ export  function Contact() {
                 {
                   icon: <Mail className="w-8 h-8" />,
                   title: "Email",
-                  info: "pawandeep@example.com",
-                  action: () => window.location.href = 'mailto:pawandeep@example.com'
+                  info: "thandipawandeep@gmail.com",
+                  action: () => window.location.href = 'mailto:thandipawandeep@gmaill.com'
                 },
                 {
                   icon: <Phone className="w-8 h-8" />,
                   title: "Phone",
-                  info: "+1 (234) 567-890",
-                  action: () => window.location.href = 'tel:+1234567890'
+                  info: "+1 (416) 884-0993",
+                    action: () => window.location.href = 'tel:+14168840993'
                 },
                 {
                   icon: <MapPin className="w-8 h-8" />,
