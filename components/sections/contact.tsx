@@ -30,6 +30,8 @@ const socialLinks = [
 ]
 
 export function Contact() {
+  console.log("Sanity Project ID:", process.env.NEXT_PUBLIC_SANITY_PROJECT_ID);
+console.log("Sanity Dataset:", process.env.NEXT_PUBLIC_SANITY_DATASET);
   return (
     <section className="min-h-screen flex flex-col pt-20 relative overflow-hidden">
       {/* Background */}
