@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useScroll, useTransform } from "framer-motion"
-import { Code, Brush, Layout, Zap, Database, Globe } from "lucide-react"
+import { Code, Brush, Layout, Zap, Database, Globe,Award} from "lucide-react"
 import { useRef, useEffect, useState } from "react"
 import { client, SKILLS_QUERY } from '@/lib/sanity'
 import { SkillCategory } from '@/lib/types'
@@ -13,7 +13,8 @@ const iconMap: { [key: string]: any } = {
   Layout,
   Zap,
   Database,
-  Globe
+  Globe,
+  Award
 }
 
 export function Skills() {
