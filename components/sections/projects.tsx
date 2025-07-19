@@ -217,14 +217,14 @@ export function Projects() {
   };
 
   return (
-    <section ref={containerRef} className="py-20 relative overflow-hidden">
+    <section ref={containerRef} className="py-20 relative overflow-hidden ">
       <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-white to-orange-50/30 dark:from-purple-950/50 dark:via-slate-900 dark:to-orange-950/30" />
       <motion.div className="absolute inset-0 opacity-20" style={{ y }}>
         <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-purple-400/30 to-pink-600/30 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-blue-400/30 to-purple-600/30 rounded-full blur-3xl" />
       </motion.div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 relative z-10 overflow-y-hidden">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -240,7 +240,7 @@ export function Projects() {
         </motion.div>
 
         {/* Desktop */}
-        <div className="hidden lg:block relative">
+        <div className="hidden lg:block relative overflow-y-hidden">
           <button onClick={scrollLeft} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full glass hover:scale-110 shadow-lg">
             <ChevronLeft className="w-6 h-6" />
           </button>
@@ -248,7 +248,7 @@ export function Projects() {
             <ChevronRight className="w-6 h-6" />
           </button>
 
-          <div ref={scrollContainerRef} className="flex gap-8 overflow-x-auto scrollbar-hide pb-4 px-12">
+          <div ref={scrollContainerRef} className="flex gap-8 overflow-x-auto scrollbar-hide pb-4 px-12 overflow-y-hidden">
             {projects.map((project, index) => (
               <motion.div
                 key={project._id}
