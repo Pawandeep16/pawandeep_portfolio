@@ -195,19 +195,24 @@ export function Projects() {
         </div>
 
         {/* Mobile */}
-        <div className="lg:hidden relative max-w-sm mx-auto">
-          <div className="absolute inset-y-0 -left-12 flex items-center z-10">
+        <div className="lg:hidden relative max-w-full mx-auto px-4">
+          <div className="absolute inset-y-0 left-2 flex items-center z-10">
             <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full glass" onClick={handlePrevious}>
               <ChevronLeft className="w-5 h-5" />
             </Button>
           </div>
-          <div className="absolute inset-y-0 -right-12 flex items-center z-10">
+          <div className="absolute inset-y-0 right-2 flex items-center z-10">
             <Button variant="ghost" size="icon" className="w-10 h-10 rounded-full glass" onClick={handleNext}>
               <ChevronRight className="w-5 h-5" />
             </Button>
           </div>
 
-          <div className="relative h-[600px] overflow-hidden rounded-3xl" onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
+          <div
+            className="relative h-[600px] overflow-hidden rounded-3xl touch-pan-y"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
             <motion.div
               key={currentIndex}
               initial={{ x: direction > 0 ? 300 : -300, opacity: 0 }}
