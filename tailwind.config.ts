@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
@@ -7,6 +7,16 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+  ],
+  safelist: [
+    {
+      // Safelist all `from-*` classes with Tailwind color names and 100–900 shades
+      pattern: /from-(red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(100|200|300|400|500|600|700|800|900)/,
+    },
+    {
+      // Safelist all `to-*` classes with Tailwind color names and 100–900 shades
+      pattern: /to-(red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(100|200|300|400|500|600|700|800|900)/,
+    },
   ],
   prefix: "",
   theme: {
@@ -91,13 +101,13 @@ const config = {
   plugins: [
     require("tailwindcss-animate"),
     function ({ addUtilities, theme }) {
-      const hyphens = theme('hyphens')
+      const hyphens = theme('hyphens');
       const utilities = Object.entries(hyphens).map(([key, value]) => ({
         [`.hyphens-${key}`]: { hyphens: value },
-      }))
-      addUtilities(utilities, ['responsive'])
+      }));
+      addUtilities(utilities, ['responsive']);
     },
   ],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;
