@@ -3,16 +3,21 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, RotateCw } from 'lucide-react';
 import { client, GALLERY_QUERY, urlFor } from '@/lib/sanity';
 import { Artwork } from '@/lib/types';
 
 export function Gallery() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
-  const [selectedImage, setSelectedImage] = useState<Artwork | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
 
+  // Lightbox state
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [showDetails, setShowDetails] = useState(true);
+  const [rotation, setRotation] = useState(false);
+
+  // Fetch artworks
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
@@ -24,26 +29,31 @@ export function Gallery() {
         setLoading(false);
       }
     };
-
     fetchArtworks();
   }, []);
 
+  // Keyboard navigation support
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setSelectedImage(null);
+      if (selectedIndex !== null) {
+        if (e.key === 'ArrowLeft') goPrev();
+        else if (e.key === 'ArrowRight') goNext();
+        else if (e.key.toLowerCase() === 'r') toggleRotation();
+        else if (e.key === 'Escape') closeLightbox();
       }
     };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedIndex]);
 
+  // Filter categories
   const categories = ['all', ...new Set(
     artworks.flatMap((artwork) =>
       Array.isArray(artwork.category) ? artwork.category : []
     )
   )];
 
+  // Filter artworks by category
   const filteredArtworks =
     filter === 'all'
       ? artworks
@@ -51,8 +61,53 @@ export function Gallery() {
           Array.isArray(artwork.category) && artwork.category.includes(filter)
         );
 
-  const openLightbox = (artwork: Artwork) => setSelectedImage(artwork);
-  const closeLightbox = () => setSelectedImage(null);
+  // Open lightbox with index
+  const openLightbox = (index: number) => {
+    setSelectedIndex(index);
+    setShowDetails(true);
+    setRotation(false);
+  };
+
+  // Close lightbox
+  const closeLightbox = () => {
+    setSelectedIndex(null);
+    setShowDetails(true);
+    setRotation(false);
+  };
+
+  // Show details briefly then fade out after 3s
+  useEffect(() => {
+    if (selectedIndex !== null) {
+      const timer = setTimeout(() => setShowDetails(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedIndex]);
+
+  // Rotate image toggle
+  const toggleRotation = () => setRotation((r) => !r);
+
+  // Check if artwork image is landscape
+  const isLandscape = (artwork: Artwork) => {
+    if (!artwork.image?.asset?.metadata) return false;
+    const { width, height } = artwork.image.asset.metadata.dimensions;
+    return width > height;
+  };
+
+  // Go to previous artwork
+  const goPrev = () => {
+    if (selectedIndex === null) return;
+    setSelectedIndex(prev => (prev === 0 ? filteredArtworks.length - 1 : (prev ?? 0) - 1));
+    setShowDetails(true);
+    setRotation(false);
+  };
+
+  // Go to next artwork
+  const goNext = () => {
+    if (selectedIndex === null) return;
+    setSelectedIndex(prev => (prev === filteredArtworks.length - 1 ? 0 : (prev ?? 0) + 1));
+    setShowDetails(true);
+    setRotation(false);
+  };
 
   if (loading) {
     return (
@@ -115,7 +170,7 @@ export function Gallery() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="break-inside-avoid mb-4 group cursor-pointer"
-              onClick={() => openLightbox(artwork)}
+              onClick={() => openLightbox(index)}
             >
               <div className="relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all duration-500 hover:scale-105 hover:shadow-2xl">
                 <Image
@@ -146,7 +201,7 @@ export function Gallery() {
 
         {/* Lightbox */}
         <AnimatePresence>
-          {selectedImage && (
+          {selectedIndex !== null && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -158,46 +213,106 @@ export function Gallery() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="relative max-w-7xl max-h-full"
+                className="relative max-w-7xl max-h-full w-full max-w-md md:max-w-4xl"
                 onClick={(e) => e.stopPropagation()}
               >
+                {/* Close Button */}
                 <button
                   onClick={closeLightbox}
-                  className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10"
+                  className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-20"
+                  aria-label="Close"
                 >
                   <X className="w-8 h-8" />
                 </button>
 
-                <div className="relative overflow-hidden rounded-2xl glow-effect">
+                {/* Prev Button */}
+                <div className="absolute top-1/2 left-2 transform -translate-y-1/2 z-20">
+                  <button
+                    onClick={goPrev}
+                    className="w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition"
+                    aria-label="Previous"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                </div>
+
+                {/* Next Button */}
+                <div className="absolute top-1/2 right-2 transform -translate-y-1/2 z-20">
+                  <button
+                    onClick={goNext}
+                    className="w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition"
+                    aria-label="Next"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </div>
+
+                {/* Rotate Button (only show if landscape and on small screens) */}
+                {isLandscape(filteredArtworks[selectedIndex]) && (
+                  <div className="absolute bottom-20 right-4 md:hidden z-20">
+                    <button
+                      onClick={toggleRotation}
+                      className="w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition"
+                      aria-label="Rotate Image"
+                      title="Rotate Image"
+                    >
+                      <RotateCw className="w-6 h-6" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Image Container with rotation */}
+                <div
+                  className={`relative overflow-hidden rounded-2xl glow-effect transition-transform duration-500 ${
+                    rotation ? "rotate-90" : ""
+                  }`}
+                  style={{ maxHeight: "90vh" }}
+                >
                   <Image
-                    src={urlFor(selectedImage.image).url()}
-                    alt={selectedImage.title}
+                    src={urlFor(filteredArtworks[selectedIndex].image).url()}
+                    alt={filteredArtworks[selectedIndex].title}
                     width={1200}
                     height={800}
-                    className="max-w-full max-h-[90vh] object-contain"
+                    className="max-w-full object-contain"
                   />
                 </div>
 
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-2xl">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="text-2xl font-bold text-white mb-2">{selectedImage.title}</h3>
-                      {selectedImage.description && (
-                        <p className="text-gray-300 mb-2">{selectedImage.description}</p>
+                {/* Details */}
+                <div
+                  className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-2xl transition-opacity duration-700 ${
+                    showDetails ? "opacity-100" : "opacity-0 pointer-events-none"
+                  }`}
+                >
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    {filteredArtworks[selectedIndex].title}
+                  </h3>
+                  {showDetails && (
+                    <>
+                      {filteredArtworks[selectedIndex].description && (
+                        <p className="text-gray-300 mb-2">
+                          {filteredArtworks[selectedIndex].description}
+                        </p>
                       )}
                       <div className="flex flex-wrap gap-2 mb-2">
-                        {selectedImage.category?.map((cat) => (
-                          <span key={cat} className="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full">
-                            {cat.replace('-', ' ')}
+                        {filteredArtworks[selectedIndex].category?.map((cat) => (
+                          <span
+                            key={cat}
+                            className="px-2 py-1 bg-blue-500/20 text-blue-300 text-xs rounded-full"
+                          >
+                            {cat.replace("-", " ")}
                           </span>
                         ))}
                       </div>
                       <div className="flex items-center gap-4 text-sm text-gray-400">
-                        {selectedImage.year && <span>Year: {selectedImage.year}</span>}
-                        {selectedImage.client && <span>Client: {selectedImage.client}</span>}
+                        {filteredArtworks[selectedIndex].year && (
+                          <span>Year: {filteredArtworks[selectedIndex].year}</span>
+                        )}
+                        {filteredArtworks[selectedIndex].client && (
+                          <span>Client: {filteredArtworks[selectedIndex].client}</span>
+                        )}
                       </div>
-                    </div>
-                  </div>
+                    </>
+                  )}
                   <div className="w-16 h-1 bg-blue-400 rounded-full mt-4" />
                 </div>
               </motion.div>
