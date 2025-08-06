@@ -12,7 +12,6 @@ export function Gallery() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
   const [visibleCount, setVisibleCount] = useState(8);
-
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [showDetails, setShowDetails] = useState(true);
   const [rotation, setRotation] = useState(false);
@@ -75,22 +74,16 @@ export function Gallery() {
 
   const toggleRotation = () => setRotation((r) => !r);
 
-  const isLandscape = (art: Artwork) => {
-    if (!art.image?.asset?.metadata) return false;
-    const { width, height } = art.image.asset.metadata.dimensions;
-    return width > height;
-  };
-
   const goPrev = () => {
     if (selectedIndex === null) return;
-    setSelectedIndex(prev => (prev === 0 ? filteredArtworks.length - 1 : (prev ?? 0) - 1));
+    setSelectedIndex(prev => (prev === 0 ? filteredArtworks.length - 1 : prev - 1));
     setShowDetails(true);
     setRotation(false);
   };
 
   const goNext = () => {
     if (selectedIndex === null) return;
-    setSelectedIndex(prev => (prev === filteredArtworks.length - 1 ? 0 : (prev ?? 0) + 1));
+    setSelectedIndex(prev => (prev === filteredArtworks.length - 1 ? 0 : prev + 1));
     setShowDetails(true);
     setRotation(false);
   };
@@ -185,30 +178,53 @@ export function Gallery() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="relative max-w-7xl w-full max-h-full"
+                className="relative w-full max-w-5xl max-h-[90vh] flex items-center justify-center"
                 onClick={(e) => e.stopPropagation()}
               >
-                <button onClick={closeLightbox} className="absolute -top-12 right-0 text-white">
+                <button 
+                  onClick={closeLightbox} 
+                  className="absolute top-4 right-4 z-50 text-white hover:text-gray-300 transition-colors"
+                >
                   <X className="w-8 h-8" />
                 </button>
-                <div className="absolute top-1/2 left-2 -translate-y-1/2">
-                  <button onClick={goPrev} className="w-10 h-10 bg-black/50 text-white rounded-full">
-                    <ChevronLeft className="w-6 h-6" />
-                  </button>
-                </div>
-                <div className="absolute top-1/2 right-2 -translate-y-1/2">
-                  <button onClick={goNext} className="w-10 h-10 bg-black/50 text-white rounded-full">
-                    <ChevronRight className="w-6 h-6" />
-                  </button>
-                </div>
-                <div className={`relative rounded-2xl transition-transform duration-500 ${rotation ? 'rotate-90' : ''}`}
-                     style={{ maxHeight: '90vh' }}>
+                <button 
+                  onClick={goPrev} 
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button 
+                  onClick={goNext} 
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={toggleRotation}
+                  className="absolute bottom-4 right-4 z-50 w-12 h-12 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+                >
+                  <RotateCw className="w-6 h-6" />
+                </button>
+                <div className={`relative w-full h-full flex items-center justify-center ${rotation ? 'rotate-90' : ''}`}>
+                  <motion.div 
+                    className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 animate-pulse blur-3xl"
+                    animate={{ 
+                      scale: [1, 1.05, 1],
+                      opacity: [0.3, 0.5, 0.3]
+                    }}
+                    transition={{ 
+                      duration: 3, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
+                  />
                   <Image
                     src={urlFor(filteredArtworks[selectedIndex].image).url()}
                     alt={filteredArtworks[selectedIndex].title}
                     width={1200}
                     height={800}
-                    className="max-w-full object-contain"
+                    className="w-full h-auto max-h-[80vh] object-contain rounded-2xl relative z-10"
+                    priority
                   />
                 </div>
               </motion.div>
