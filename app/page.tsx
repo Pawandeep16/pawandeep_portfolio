@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowDown, Github, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skills } from '@/components/sections/skills';
-import  Education  from '@/components/sections/education';
+import Education from '@/components/sections/education';
 import { Experience } from '@/components/sections/experience';
 import { Certifications } from '@/components/sections/certificate';
 import { Projects } from '@/components/sections/projects';
@@ -53,8 +53,8 @@ export default function HomePage() {
           roles: ["Graphics Designer", "Full Stack Developer", "UI/UX Designer"],
           description: "Transforming ideas into stunning digital experiences through innovative design and cutting-edge development.",
           location: "Toronto, ON",
-          phone: "+1 (234) 567-890",
-          email: "pawandeep@example.com"
+          phone: "+1 (416) 884-0993",
+          email: "thandipawandeep@gmail.com"
         });
       } finally {
         setLoading(false);
@@ -76,7 +76,7 @@ export default function HomePage() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
- if (loading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900/80 via-slate-800/70 to-slate-900/90">
         <div className="text-center">
@@ -114,13 +114,13 @@ export default function HomePage() {
         </motion.div>
 
         <motion.div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-12" style={{ y: y1, opacity, scale }}>
-          <div className="text-center max-w-6xl mx-auto">
+          <div className="text-center max-w-6xl mx-auto py-6">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-white via-slate-200 to-white bg-clip-text text-transparent mb-4">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold bg-gradient-to-r from-white via-slate-200 to-white bg-clip-text text-transparent mb-4 leading-[1.3] sm:leading-[1.4] md:leading-[1.5] tracking-tight overflow-visible break-words">
                 {heroData?.name}
               </h1>
               <div className="flex flex-wrap justify-center gap-2 mb-6">
