@@ -200,7 +200,7 @@ export default function HomePage() {
                 className="text-xs sm:text-sm px-6 sm:px-8 py-2 sm:py-3 rounded-full border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm transition-all duration-300 transform hover:scale-105"
               >
                 <Linkedin className="w-4 sm:w-5 h-4 sm:h-5 mr-2" />
-                LinkedIn
+                  <a href=" https://www.linkedin.com/in/pawandeep-thandi-2432031ab/ ">LinkedIn</a> 
               </Button>
             </motion.div>
 
