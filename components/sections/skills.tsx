@@ -26,6 +26,7 @@ export function Skills() {
         setSkillCategories(data)
       } catch (error) {
         console.error('Error fetching skills:', error)
+        // Fallback sample data
         setSkillCategories([
           {
             _id: '1',
@@ -67,16 +68,21 @@ export function Skills() {
   if (loading) {
     return (
       <section className="py-20 md:py-24 lg:py-32 relative overflow-hidden">
-        {/* loading UI here */}
+        <div className="text-center text-slate-600 dark:text-slate-300">Loading skills...</div>
       </section>
     )
   }
 
   return (
     <section ref={containerRef} className="py-20 md:py-24 lg:py-32 relative overflow-hidden">
-      {/* background gradients & motion divs omitted for brevity */}
+      {/* Background motion div */}
+      <motion.div className="absolute inset-0 opacity-20" style={{ y, opacity }}>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-purple-400/30 to-pink-600/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-blue-400/30 to-purple-600/30 rounded-full blur-3xl" />
+      </motion.div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
+        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -92,9 +98,12 @@ export function Skills() {
           </p>
         </motion.div>
 
+        {/* Skills Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
           {skillCategories.map((skillCategory, index) => {
-            const IconComponent = Icons[skillCategory.icon] || Icons.Code
+            // Type-safe Lucide icon
+            const allIcons = Icons as unknown as Record<string, React.ElementType>
+            const IconComponent = allIcons[skillCategory.icon] || allIcons.Code
 
             return (
               <motion.div
@@ -137,3 +146,5 @@ export function Skills() {
     </section>
   )
 }
+
+export default Skills

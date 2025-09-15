@@ -7,18 +7,15 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
-// Fix: Make your Button support motion props
-const MotionButton = motion(Button);
+// New motion.create() way for motion-enabled Button
+const MotionButton = motion.create(Button);
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -36,9 +33,7 @@ const Header = () => {
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    if (element) element.scrollIntoView({ behavior: "smooth" });
     setIsMenuOpen(false);
   };
 
@@ -74,20 +69,25 @@ const Header = () => {
             </h1>
           </motion.div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1">
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center space-x-3">
             {navItems.map((item, index) => (
               <motion.button
                 key={item.href}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 + 0.3 }}
                 onClick={() => scrollToSection(item.href)}
-                className="btn-ghost ripple-effect"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="relative overflow-hidden rounded-xl px-4 py-2 font-medium text-slate-900 dark:text-white transition-all duration-300"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 + 0.3, type: "spring", stiffness: 100 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
               >
-                {item.label}
+                <span className="relative z-10">{item.label}</span>
+                <motion.div
+                  className="absolute inset-0 rounded-xl bg-white/10 dark:bg-white/20 backdrop-blur-md opacity-0"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1, transition: { duration: 0.35 } }}
+                />
               </motion.button>
             ))}
           </nav>
@@ -108,12 +108,18 @@ const Header = () => {
             >
               <MotionButton
                 onClick={downloadResume}
-                className="btn-primary"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="relative btn-primary overflow-hidden rounded-xl px-4 py-2"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
               >
-                <Download className="w-4 h-4 mr-2" />
-                Resume
+                <span className="relative z-10 flex items-center gap-2">
+                  <Download className="w-4 h-4" /> Resume
+                </span>
+                <motion.div
+                  className="absolute inset-0 bg-white/10 dark:bg-white/20 backdrop-blur-md opacity-0"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1, transition: { duration: 0.35 } }}
+                />
               </MotionButton>
             </motion.div>
           </div>
@@ -189,12 +195,18 @@ const Header = () => {
                 >
                   <MotionButton
                     onClick={downloadResume}
-                    className="btn-primary w-full"
+                    className="relative w-full btn-primary overflow-hidden rounded-xl px-4 py-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Download className="w-4 h-4 mr-2" />
-                    Download Resume
+                    <span className="relative z-10 flex items-center gap-2">
+                      <Download className="w-4 h-4" /> Download Resume
+                    </span>
+                    <motion.div
+                      className="absolute inset-0 bg-white/10 dark:bg-white/20 backdrop-blur-md opacity-0"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1, transition: { duration: 0.35 } }}
+                    />
                   </MotionButton>
                 </motion.div>
               </nav>

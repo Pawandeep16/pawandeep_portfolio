@@ -1,30 +1,30 @@
-"use client";
+"use client"
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Calendar, MapPin, Award } from "lucide-react";
-import { useRef, useEffect, useState } from "react";
-import { client, EDUCATION_QUERY } from "@/lib/sanity";
-import { Education as EducationType } from "@/lib/types";
+import { motion, useScroll, useTransform } from "framer-motion"
+import { Calendar, MapPin, Award } from "lucide-react"
+import { useRef, useEffect, useState } from "react"
+import { client, EDUCATION_QUERY } from "@/lib/sanity"
+import { Education as EducationType } from "@/lib/types"
 
 export default function Education() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [education, setEducation] = useState<EducationType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [education, setEducation] = useState<EducationType[]>([])
+  const [loading, setLoading] = useState(true)
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
-  });
+  })
 
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100])
 
   useEffect(() => {
     const fetchEducation = async () => {
       try {
-        const data = await client.fetch(EDUCATION_QUERY);
-        setEducation(data);
+        const data = await client.fetch(EDUCATION_QUERY)
+        setEducation(data)
       } catch (error) {
-        console.error("Error fetching education:", error);
+        console.error("Error fetching education:", error)
         // Fallback data
         setEducation([
           {
@@ -40,19 +40,19 @@ export default function Education() {
               "Advanced studies in full-stack development, database design, and modern software engineering practices.",
             achievements: ["Dean's List", "Outstanding Project Award", "4.0 GPA"],
           },
-        ]);
+        ])
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchEducation();
-  }, []);
+    fetchEducation()
+  }, [])
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", { year: "numeric", month: "long" });
-  };
+    const date = new Date(dateString)
+    return date.toLocaleDateString("en-US", { year: "numeric", month: "long" })
+  }
 
   if (loading) {
     return (
@@ -73,26 +73,34 @@ export default function Education() {
           </div>
         </div>
       </section>
-    );
+    )
   }
 
   return (
     <section ref={containerRef} className="py-20 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-green-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-green-950/30" />
-      {/* Floating Elements */}
-      <motion.div className="absolute inset-0 opacity-20" style={{ y }}>
-        <div className="absolute top-20 right-10 w-72 h-72 bg-gradient-to-r from-green-400/30 to-blue-600/30 rounded-xl blur-3xl" />
-        <div className="absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-r from-blue-400/30 to-green-600/30 rounded-xl blur-3xl" />
-      </motion.div>
+
+      {/* Floating Elements (only these animate) */}
+      <div className="absolute inset-0 opacity-20">
+        <motion.div
+          style={{ y, willChange: "transform" }}
+          className="absolute top-20 right-10 w-72 h-72 bg-gradient-to-r from-green-400/30 to-blue-600/30 rounded-xl blur-3xl"
+        />
+        <motion.div
+          style={{ y, willChange: "transform" }}
+          className="absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-r from-blue-400/30 to-green-600/30 rounded-xl blur-3xl"
+        />
+      </div>
 
       <div className="container mx-auto px-4 relative z-10">
+        {/* Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-16 will-change-transform"
         >
           <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-slate-900 via-green-800 to-slate-900 dark:from-white dark:via-green-200 dark:to-white bg-clip-text text-transparent mb-6">
             Education Journey
@@ -102,19 +110,21 @@ export default function Education() {
           </p>
         </motion.div>
 
+        {/* Education Cards */}
         <div className="max-w-4xl mx-auto">
-          {education.map((edu, index) => (
-            <motion.div
-              key={edu._id}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="relative mb-16 last:mb-0"
-            >
-              {/* Removed timeline line and dot */}
+          {education.map((edu, index) => {
+            // normalize achievements to an array so map is always safe
+            const achievements = edu.achievements ?? []
 
-              <div>
+            return (
+              <motion.div
+                key={edu._id}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: index * 0.2 }}
+                className="relative mb-16 last:mb-0 will-change-transform"
+              >
                 <motion.div
                   className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-2xl border border-white/20 dark:border-slate-700/20 transition-all duration-500"
                   whileHover={{ scale: 1.02, y: -5 }}
@@ -151,8 +161,8 @@ export default function Education() {
                     {edu.description}
                   </p>
 
-                  {/* Achievements */}
-                  {edu.achievements && edu.achievements.length > 0 && (
+                  {/* Achievements (safe: achievements is always an array here) */}
+                  {achievements.length > 0 && (
                     <>
                       <div className="flex items-center gap-2 mb-4">
                         <Award className="w-5 h-5 text-yellow-500" />
@@ -161,14 +171,14 @@ export default function Education() {
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {edu.achievements.map((achievement, achIndex) => (
+                        {achievements.map((achievement, achIndex) => (
                           <motion.span
-                            key={achievement}
+                            key={`${achievement}-${achIndex}`}
                             initial={{ opacity: 0, scale: 0 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.3, delay: achIndex * 0.1 }}
-                            className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm rounded-lg border border-green-200 dark:border-green-700"
+                            className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm rounded-lg border border-green-200 dark:border-green-700 will-change-transform"
                           >
                             {achievement}
                           </motion.span>
@@ -187,11 +197,11 @@ export default function Education() {
                     </motion.span>
                   )}
                 </motion.div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </section>
-  );
+  )
 }

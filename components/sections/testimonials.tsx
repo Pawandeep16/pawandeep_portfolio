@@ -67,6 +67,7 @@ export function Testimonials() {
 
   return (
     <section ref={containerRef} className="py-20 relative overflow-hidden">
+      {/* Background gradients */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-pink-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-pink-950/30" />
 
       <motion.div className="absolute inset-0 opacity-20" style={{ y }}>
@@ -75,6 +76,7 @@ export function Testimonials() {
       </motion.div>
 
       <div className="container mx-auto px-4 relative z-10">
+        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -90,6 +92,7 @@ export function Testimonials() {
           </p>
         </motion.div>
 
+        {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <motion.div
@@ -148,3 +151,5 @@ export function Testimonials() {
     </section>
   )
 }
+
+export default Testimonials

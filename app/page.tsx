@@ -6,7 +6,7 @@ import { ArrowDown, Github, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skills } from '@/components/sections/skills';
 import Education from '@/components/sections/education';
-import { Experience } from '@/components/sections/experience';
+import  Experience  from '@/components/sections/experience';
 import { Certifications } from '@/components/sections/certificate';
 import { Projects } from '@/components/sections/projects';
 import { Gallery } from '@/components/sections/gallery';
