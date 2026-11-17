@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /studio
+Sitemap: https://pawandeep-portfolio.vercel.app/sitemap.xml

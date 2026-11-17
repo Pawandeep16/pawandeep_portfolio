@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="Warm gallery wall with panel moulding, picture rail and skirting">
+  <defs>
+    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f8f2e6"/>
+      <stop offset="0.55" stop-color="#f3ead7"/>
+      <stop offset="1" stop-color="#ece0c8"/>
+    </linearGradient>
+    <linearGradient id="topShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b2f1e" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#3b2f1e" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="woodGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8a6b4a"/>
+      <stop offset="1" stop-color="#6f543a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="760" fill="url(#wallGrad)"/>
+  <rect width="1200" height="70" fill="url(#topShade)"/>
+  <!-- panel moulding -->
+  <g fill="none" stroke="#d9cbae" stroke-width="2">
+    <rect x="70" y="120" width="235" height="520" rx="4"/>
+    <rect x="345" y="120" width="235" height="520" rx="4"/>
+    <rect x="620" y="120" width="235" height="520" rx="4"/>
+    <rect x="895" y="120" width="235" height="520" rx="4"/>
+  </g>
+  <g fill="none" stroke="#e6dcc4" stroke-width="1">
+    <rect x="80" y="130" width="215" height="500" rx="3"/>
+    <rect x="355" y="130" width="215" height="500" rx="3"/>
+    <rect x="630" y="130" width="215" height="500" rx="3"/>
+    <rect x="905" y="130" width="215" height="500" rx="3"/>
+  </g>
+  <!-- picture rail -->
+  <rect x="0" y="84" width="1200" height="9" fill="#dcc9a4"/>
+  <rect x="0" y="93" width="1200" height="2" fill="#bfae8a"/>
+  <!-- skirting board -->
+  <rect x="0" y="688" width="1200" height="72" fill="url(#woodGrad)"/>
+  <rect x="0" y="688" width="1200" height="4" fill="#5d4630"/>
+</svg>

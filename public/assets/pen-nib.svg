@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -32 40 68" role="img" aria-label="Pen tool nib">
+  <!-- The pen nib only, extracted from public/assets/pen-tool.svg.
+       Transparent background — no card, no border, no label. -->
+  <g>
+    <path d="M0 -26 L14 14 L0 8 L-14 14 Z" fill="#171410"/>
+    <path d="M0 -26 L14 14 L0 8 Z" fill="#44403C"/>
+    <circle cx="0" cy="-12" r="4" fill="#F59E0B"/>
+    <path d="M-14 14 L0 30 L14 14" fill="#E8590C"/>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 190" role="img" aria-label="Soft warm spotlight cone">
+  <defs>
+    <linearGradient id="coneGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe9b4" stop-opacity="0.95"/>
+      <stop offset="0.55" stop-color="#ffe9b4" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#ffe9b4" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="poolGrad" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffe9b4" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ffe9b4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <polygon points="100,6 26,186 174,186" fill="url(#coneGrad)"/>
+  <ellipse cx="100" cy="184" rx="76" ry="7" fill="url(#poolGrad)"/>
+  <rect x="90" y="0" width="20" height="7" rx="2" fill="#3f3a33" opacity="0.85"/>
+</svg>

@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 39 33% 97%;
+    --foreground: 30 12% 12%;
+    --card: 39 33% 99%;
+    --card-foreground: 30 12% 12%;
+    --popover: 39 33% 99%;
+    --popover-foreground: 30 12% 12%;
+    --primary: 22 89% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 36 20% 93%;
+    --secondary-foreground: 30 12% 12%;
+    --muted: 36 20% 93%;
+    --muted-foreground: 30 8% 42%;
+    --accent: 36 20% 93%;
+    --accent-foreground: 30 12% 12%;
+    --border: 30 12% 86%;
+    --input: 30 12% 86%;
+    --ring: 22 89% 48%;
+    --radius: 1rem;
+  }
+  .dark {
+    --background: 36 14% 6%;
+    --foreground: 40 20% 93%;
+    --card: 36 12% 9%;
+    --card-foreground: 40 20% 93%;
+    --popover: 36 12% 9%;
+    --popover-foreground: 40 20% 93%;
+    --primary: 22 89% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 36 10% 14%;
+    --secondary-foreground: 40 20% 93%;
+    --muted: 36 10% 14%;
+    --muted-foreground: 36 8% 64%;
+    --accent: 36 10% 14%;
+    --accent-foreground: 40 20% 93%;
+    --border: 36 10% 18%;
+    --input: 36 10% 18%;
+    --ring: 22 89% 48%;
+  }
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
+  /* v14: smooth light/dark switching — colours cross-fade over 0.5s
+     instead of snapping. (next-themes' disableTransitionOnChange was
+     removed in providers.tsx so these transitions can run.) */
+  body, header, footer, main, section, .card-surface, .btn-primary, .btn-ghost, .chip {
+    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+    letter-spacing: -0.01em;
+  }
+  ::selection { @apply bg-amber-500/30 text-inherit; }
+  :focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 3px; border-radius: 4px; }
+  h1, h2, h3 { text-wrap: balance; }
+}
+
+/* Film grain — pure CSS/SVG, no image file. */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+@layer components {
+  .card-surface {
+    @apply rounded-2xl border border-stone-200/90 bg-white shadow-[0_1px_0_rgba(0,0,0,0.02),0_16px_40px_-24px_rgba(60,40,10,0.25)] dark:border-white/10 dark:bg-white/[0.03] dark:shadow-none;
+  }
+  .hairline { @apply border-t border-stone-200/80 dark:border-white/10; }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-md border border-stone-200 bg-stone-50 px-2.5 py-1 font-mono text-[11px] font-medium uppercase tracking-wide text-stone-600 dark:border-white/10 dark:bg-white/5 dark:text-stone-300;
+  }
+  /* Mono section number, e.g. "01 — About" — replaces the old blue eyebrow. */
+  .eyebrow {
+    @apply font-mono text-[11px] font-semibold uppercase tracking-[0.24em] text-amber-700 dark:text-amber-500;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-amber-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-600/25 transition hover:bg-amber-500 active:scale-[0.98];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-stone-300 bg-white/60 px-6 py-3 text-sm font-semibold text-stone-900 transition hover:border-stone-400 hover:bg-white dark:border-white/20 dark:bg-white/5 dark:text-white dark:hover:border-white/30 dark:hover:bg-white/10 active:scale-[0.98];
+  }
+  .grid-bg {
+    background-image: linear-gradient(to right, rgb(120 100 70 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(120 100 70 / 0.06) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .dot-grid {
+    background-image: radial-gradient(rgb(120 100 70 / 0.25) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .serif-accent { @apply font-display italic font-normal; }
+}
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { @apply rounded-full bg-stone-300 dark:bg-stone-700; }
+
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.animate-marquee { animation: marquee 36s linear infinite; }
+.animate-marquee:hover { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .animate-marquee { animation: none !important; }
+  .grain { display: none; }
+}
+@media print { .no-print { display: none !important; } }

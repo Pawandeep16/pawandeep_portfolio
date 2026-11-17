@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 260" role="img" aria-label="Isometric parcel box with tape and label">
+  <defs>
+    <linearGradient id="boxTop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FDE68A"/><stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+    <linearGradient id="boxLeft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F59E0B"/><stop offset="1" stop-color="#D97706"/>
+    </linearGradient>
+    <linearGradient id="boxRight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EA580C"/><stop offset="1" stop-color="#9A3412"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="160" cy="232" rx="110" ry="12" fill="#171410" opacity="0.14"/>
+  <!-- isometric box -->
+  <polygon points="160,28 296,96 160,164 24,96" fill="url(#boxTop)" stroke="#9A3412" stroke-width="3" stroke-linejoin="round"/>
+  <polygon points="24,96 160,164 160,236 24,168" fill="url(#boxLeft)" stroke="#9A3412" stroke-width="3" stroke-linejoin="round"/>
+  <polygon points="296,96 160,164 160,236 296,168" fill="url(#boxRight)" stroke="#9A3412" stroke-width="3" stroke-linejoin="round"/>
+  <!-- tape -->
+  <polygon points="146,36 174,36 174,158 146,158" fill="#FFF7ED" opacity="0.85"/>
+  <polygon points="146,158 174,158 174,236 146,236" fill="#FFF7ED" opacity="0.45"/>
+  <!-- label -->
+  <g transform="rotate(30 228 150)">
+    <rect x="196" y="128" width="66" height="44" rx="5" fill="#FFF7ED" stroke="#9A3412" stroke-width="2"/>
+    <rect x="204" y="138" width="50" height="5" rx="2.5" fill="#171410"/>
+    <rect x="204" y="149" width="38" height="5" rx="2.5" fill="#78716C"/>
+    <rect x="204" y="160" width="46" height="5" rx="2.5" fill="#D6D3D1"/>
+  </g>
+  <!-- fragile mark -->
+  <g transform="translate(66 132)">
+    <path d="M0 14 Q0 2 12 2 Q24 2 24 14 L24 26 L18 26 L18 16 L6 16 L6 26 L0 26 Z" fill="#FFF7ED" opacity="0.9"/>
+    <path d="M12 6 V22" stroke="#9A3412" stroke-width="2"/>
+  </g>
+  <!-- motion arcs -->
+  <g fill="none" stroke="#E8590C" stroke-width="4" stroke-linecap="round" opacity="0.6">
+    <path d="M40 40 Q70 18 100 30"/><path d="M220 30 Q250 18 280 40"/>
+  </g>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 260" role="img" aria-label="Pen tool cursor with bezier handles and anchor points">
+  <rect width="320" height="260" rx="16" fill="#FAF7F2"/>
+  <!-- bezier curve being drawn -->
+  <path d="M52 196 C 110 120, 150 220, 210 140 S 268 84, 272 84" fill="none" stroke="#E8590C" stroke-width="5" stroke-linecap="round"/>
+  <path d="M52 196 C 110 120, 150 220, 210 140 S 268 84, 272 84" fill="none" stroke="#E8590C" stroke-width="5" stroke-linecap="round" stroke-dasharray="3 14" opacity="0.35"/>
+  <!-- handles -->
+  <g stroke="#78716C" stroke-width="2">
+    <line x1="52" y1="196" x2="110" y2="120"/><line x1="150" y1="220" x2="210" y2="140"/><line x1="210" y1="140" x2="268" y2="84"/>
+  </g>
+  <!-- anchor points -->
+  <g fill="#fff" stroke="#171410" stroke-width="2.5">
+    <rect x="44" y="188" width="16" height="16" rx="3"/>
+    <rect x="142" y="212" width="16" height="16" rx="3"/>
+    <rect x="202" y="132" width="16" height="16" rx="3"/>
+  </g>
+  <g fill="#E8590C" stroke="#fff" stroke-width="2"><circle cx="110" cy="120" r="7"/><circle cx="268" cy="84" r="7"/></g>
+  <!-- pen nib cursor -->
+  <g transform="translate(238 34) rotate(45)">
+    <path d="M0 -26 L14 14 L0 8 L-14 14 Z" fill="#171410"/>
+    <path d="M0 -26 L14 14 L0 8 Z" fill="#44403C"/>
+    <circle cx="0" cy="-12" r="4" fill="#F59E0B"/>
+    <path d="M-14 14 L0 30 L14 14" fill="#E8590C"/>
+  </g>
+  <text x="24" y="238" font-family="monospace" font-size="13" font-weight="700" letter-spacing="2" fill="#78716C">PEN TOOL — VECTOR IN PROGRESS</text>
+</svg>

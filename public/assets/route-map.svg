@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Stylised route map from warehouse to destination">
+  <rect width="640" height="360" rx="16" fill="#FAF7F2"/>
+  <!-- streets -->
+  <g stroke="#E7E0D2" stroke-width="26" stroke-linecap="round">
+    <line x1="0" y1="90" x2="640" y2="70"/><line x1="0" y1="210" x2="640" y2="230"/>
+    <line x1="140" y1="0" x2="120" y2="360"/><line x1="420" y1="0" x2="450" y2="360"/>
+    <line x1="0" y1="300" x2="640" y2="290"/>
+  </g>
+  <g stroke="#D6D3D1" stroke-width="2" stroke-dasharray="10 10"><line x1="0" y1="90" x2="640" y2="70"/><line x1="140" y1="0" x2="120" y2="360"/></g>
+  <!-- blocks -->
+  <g fill="#EDE6D6"><rect x="180" y="110" width="90" height="60" rx="8"/><rect x="300" y="110" width="70" height="60" rx="8"/><rect x="180" y="250" width="90" height="40" rx="8"/><rect x="480" y="120" width="80" height="60" rx="8"/></g>
+  <!-- park -->
+  <rect x="480" y="250" width="110" height="60" rx="10" fill="#D9F99D"/>
+  <circle cx="510" cy="272" r="10" fill="#65A30D"/><circle cx="545" cy="288" r="12" fill="#65A30D"/>
+  <!-- route -->
+  <path d="M90 285 C 150 240, 210 250, 260 190 S 360 150, 420 130 S 520 110, 552 84" fill="none" stroke="#E8590C" stroke-width="7" stroke-linecap="round" stroke-dasharray="16 12"/>
+  <path d="M90 285 C 150 240, 210 250, 260 190 S 360 150, 420 130 S 520 110, 552 84" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 22" opacity="0.7"/>
+  <!-- stops -->
+  <g font-family="monospace" font-size="12" font-weight="700">
+    <circle cx="90" cy="285" r="10" fill="#171410"/><text x="90" y="312" text-anchor="middle" fill="#171410">WAREHOUSE</text>
+    <circle cx="260" cy="190" r="8" fill="#F59E0B" stroke="#fff" stroke-width="3"/><text x="260" y="172" text-anchor="middle" fill="#78716C">CHECK-IN</text>
+    <circle cx="420" cy="130" r="8" fill="#F59E0B" stroke="#fff" stroke-width="3"/><text x="420" y="112" text-anchor="middle" fill="#78716C">LOADING</text>
+  </g>
+  <!-- destination pin -->
+  <g transform="translate(552 84)">
+    <path d="M0 34 C-20 14 -20 -12 0 -12 C20 -12 20 14 0 34 Z" fill="#E8590C" stroke="#fff" stroke-width="3"/>
+    <circle r="7" cy="6" fill="#fff"/>
+    <text y="-22" text-anchor="middle" font-family="monospace" font-size="13" font-weight="700" fill="#171410">DELIVERED</text>
+  </g>
+  <!-- compass -->
+  <g transform="translate(592 322)"><circle r="22" fill="#fff" stroke="#D6D3D1" stroke-width="2"/><path d="M0 -14 L5 6 L0 2 L-5 6 Z" fill="#E8590C"/><text y="4" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#171410">N</text></g>
+</svg>
