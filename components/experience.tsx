@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Briefcase, ChevronDown, MapPin, Truck, Code2 } from "lucide-react";
+import { ChevronDown, MapPin, Truck, Code2 } from "lucide-react";
 import { client, EXPERIENCE_QUERY } from "@/lib/sanity";
 import { fallbackExperience } from "@/lib/fallback-data";
 import type { Experience } from "@/lib/types";
@@ -50,7 +50,7 @@ export function Experience() {
           </div>
         </Reveal>
 
-        <ol className="relative mt-12 space-y-6 border-l-2 border-stone-200 pl-8 dark:border-white/10 sm:pl-10">
+        <ol className="mt-12 space-y-4">
           {items.map((e, i) => {
             const key = `${e.company}-${e.title}`;
             const isOpen = open.has(key);
@@ -61,15 +61,16 @@ export function Experience() {
             const collapsible = bullets.length > 2 || tags.length > 5;
             const isLogistics = /gobolt/i.test(e.company);
             return (
-              <Reveal key={key} delay={0.04 * i} as="li" className="relative">
-                <span className="absolute -left-[43px] grid h-7 w-7 place-items-center rounded-full bg-amber-600 text-white shadow-lg shadow-amber-600/30 sm:-left-[51px]" aria-hidden="true">
-                  <Briefcase className="h-3.5 w-3.5" />
-                </span>
-                <article className="card-surface p-6 sm:p-7">
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">{e.title}</h3>
-                    <p className="text-sm font-medium text-amber-600 dark:text-amber-400">{formatDate(e.startDate)} — {e.current ? "Present" : formatDate(e.endDate)}</p>
+              <Reveal key={key} delay={0.04 * i} as="li">
+                <article className="card-surface flex flex-col gap-5 p-6 transition hover:-translate-y-1 sm:flex-row sm:p-7">
+                  <div className="shrink-0 sm:w-44 sm:border-r sm:border-stone-200 sm:pr-5 dark:sm:border-white/10">
+                    <p className="font-mono text-xs font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400">
+                      {formatDate(e.startDate)} — {e.current ? "Present" : formatDate(e.endDate)}
+                    </p>
+                    {e.current && <span className="mt-2 inline-block rounded-full bg-emerald-600/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-400">Current role</span>}
                   </div>
+                  <div className="min-w-0 flex-1">
+                  <h3 className="text-xl font-semibold text-zinc-900 dark:text-white">{e.title}</h3>
                   <p className="mt-1 text-sm font-medium text-zinc-700 dark:text-zinc-300">
                     {e.company} <span className="font-normal text-zinc-500 dark:text-zinc-400">· <MapPin className="mr-0.5 inline h-3.5 w-3.5" />{e.location}</span>
                     {isLogistics ? <span className="ml-2 rounded-md bg-amber-600/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-amber-700 dark:text-amber-400">Logistics</span> : <span className="ml-2 rounded-md bg-stone-900/5 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-stone-600 dark:bg-white/10 dark:text-stone-300">Web</span>}
@@ -91,6 +92,7 @@ export function Experience() {
                       {isOpen ? "Show less" : "Read more"} <ChevronDown className={isOpen ? "h-4 w-4 rotate-180 transition" : "h-4 w-4 transition"} />
                     </button>
                   )}
+                  </div>
                 </article>
               </Reveal>
             );

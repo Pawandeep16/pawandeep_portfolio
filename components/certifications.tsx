@@ -55,19 +55,19 @@ export function Certifications() {
     <section id="certifications" className="scroll-mt-24 py-28 sm:py-40" aria-label="Certifications">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Chapter V — Certified" title="Learning, certified." accent="certified." marker="CERTIFIED"
-          intro="Four certifications. Click any certificate to view it larger." />
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
+          intro="Click any certificate to view it larger." />
+        <div className="mt-12 space-y-5">
           {certs.map((c, i) => {
             const src = imageUrl(c.image, 900);
             return (
-              <Reveal key={c._id} delay={0.05 * i} className="card-surface group flex flex-col overflow-hidden transition hover:-translate-y-1">
+              <Reveal key={c._id} delay={0.05 * i} className="card-surface group flex flex-col overflow-hidden transition hover:-translate-y-1 sm:flex-row">
                 <button type="button" onClick={() => setSelected(i)} aria-label={`View ${c.title} certificate larger`}
-                  className="relative block w-full overflow-hidden bg-stone-100 text-left dark:bg-white/5">
+                  className="relative block w-full shrink-0 overflow-hidden bg-stone-100 text-left dark:bg-white/5 sm:w-64">
                   {src ? (
                     <Image src={src} alt={`${c.title} — certificate from ${c.issuer}`} width={900} height={640}
-                      className="aspect-[4/3] w-full object-cover object-top transition duration-500 group-hover:scale-[1.03]" loading="lazy" />
+                      className="aspect-[4/3] w-full object-cover object-top transition duration-500 group-hover:scale-[1.03] sm:aspect-auto sm:h-full" loading="lazy" />
                   ) : (
-                    <span className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 p-6 text-center">
+                    <span className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 p-6 text-center sm:aspect-auto sm:h-full">
                       <Award className="h-8 w-8 text-amber-600 dark:text-amber-400" />
                       <span className="text-sm text-stone-500 dark:text-stone-400">Certificate image not available</span>
                     </span>
@@ -80,7 +80,7 @@ export function Certifications() {
                     <span className="shrink-0 text-sm font-medium text-zinc-500 dark:text-zinc-400">{formatDate(c.date)}</span>
                   </div>
                   <p className="mt-1 text-sm font-medium text-amber-600 dark:text-amber-400">{c.issuer}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{c.description}</p>
+                  <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{c.description}</p>
                   {c.skills?.length ? (
                     <ul className="mt-4 flex flex-wrap gap-2">{c.skills.map((s) => <li key={s} className="chip">{s.trim()}</li>)}</ul>
                   ) : null}

@@ -1,27 +1,23 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
 import { ArrowUpRight } from "lucide-react";
 import { imageUrl } from "@/lib/sanity";
 import { aspectFromArtwork } from "@/lib/gallery-config";
-import { ROMAN, chapterFacts, chapterParagraph, type ChapterWall } from "@/lib/chapter-config";
+import { ROMAN, chapterFacts, chapterParagraph, darkPalette, type ChapterWall } from "@/lib/chapter-config";
 import { anton } from "@/lib/fonts";
 import type { OriginRect } from "@/components/gallery-3d/frame";
 
 /**
- * Chapter slide — v14: the six chapters no longer stack vertically; each
- * one is a single 100vw × 100svh page inside the horizontal pager
- * (components/gallery-chapter/pager.tsx), so scrolling down flips through
- * them left to right like turning pages.
- *
- * Everything from v13 is intact, compressed to fit one screen: the giant
- * marker (smaller, ~10vw), the chapter label, the split 50/50 (first
- * artwork + word-by-word text column), and the offset collage — now a
- * horizontal strip of the remaining artworks along the bottom. The
- * word-by-word reveal and the marker wipe are driven by the `active`
- * prop (true when this slide is the one on screen) instead of vertical
- * scroll position, so they fire exactly when the page turns to this slide.
- * Clicking an artwork still opens the borderless viewer (v10 wrap).
+ * Chapter slide — one 100vw × 100svh page inside the horizontal pager.
+ * Giant marker (wipes in letter by letter), chapter label, split 50/50
+ * (first artwork + word-by-word text column), and an offset collage of
+ * the remaining artworks. The word reveal and marker wipe fire from the
+ * `active` prop (true when this slide is on screen). Clicking an artwork
+ * opens the borderless viewer. On mobile the slide compresses to fit one
+ * screen and the collage becomes a swipeable strip, so no artwork is
+ * clipped off the edge.
  */
 
 function hexToRgba(hex: string, alpha: number): string {
@@ -86,7 +82,9 @@ export function Chapter({
   active: boolean;
   onOpen: (globalIndex: number, rect: OriginRect | null) => void;
 }) {
-  const { accent, ground, ink } = wall.palette;
+  const { resolvedTheme } = useTheme();
+  const palette = resolvedTheme === "dark" ? darkPalette(wall.palette) : wall.palette;
+  const { accent, ground, ink } = palette;
   const facts = chapterFacts(wall);
   const first = wall.items[0];
   const rest = wall.items.slice(1);
@@ -108,7 +106,7 @@ export function Chapter({
       style={{ backgroundColor: ground, color: ink }}
     >
       {/* Giant decorative marker — wipes in letter by letter when the page turns here */}
-      <div className="pointer-events-none mx-auto w-full max-w-7xl select-none pt-[4vh] text-center" aria-hidden="true">
+      <div className="pointer-events-none mx-auto w-full max-w-7xl select-none pt-3 text-center md:pt-[4vh]" aria-hidden="true">
         <p
           className={`${anton.className} whitespace-nowrap uppercase leading-none`}
           style={{ fontSize: `${markerVw}vw`, color: accent }}
@@ -128,7 +126,7 @@ export function Chapter({
       </div>
 
       {/* Chapter label */}
-      <div className="relative z-10 mx-auto w-full max-w-7xl pt-[2.5vh] text-center">
+      <div className="relative z-10 mx-auto w-full max-w-7xl pt-2 text-center md:pt-[2.5vh]">
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
@@ -154,7 +152,7 @@ export function Chapter({
 
       {/* Split 50/50 — first artwork one side, word-by-word text the other */}
       {first && (
-        <div className="mx-auto grid w-full max-w-7xl min-h-0 flex-1 grid-cols-1 items-center gap-5 py-[2vh] md:grid-cols-2 md:gap-10">
+        <div className="mx-auto grid w-full max-w-7xl min-h-0 flex-1 grid-cols-1 items-center gap-4 py-2 md:grid-cols-2 md:gap-10 md:py-[2vh]">
           <motion.div
             initial={{ opacity: 0, scale: 1.04 }}
             animate={active ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.04 }}
@@ -165,7 +163,7 @@ export function Chapter({
               type="button"
               onClick={open(0)}
               aria-label={`Open ${first.title || "artwork"} in the viewer`}
-              className="block max-h-[42vh] cursor-pointer overflow-hidden md:max-h-[46vh]"
+              className="block max-h-[30vh] cursor-pointer overflow-hidden md:max-h-[46vh]"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -173,7 +171,7 @@ export function Chapter({
                 alt={first.title || "Artwork"}
                 loading="lazy"
                 draggable={false}
-                className="h-auto max-h-[42vh] w-auto max-w-full object-contain md:max-h-[46vh]"
+                className="h-auto max-h-[30vh] w-auto max-w-full object-contain md:max-h-[46vh]"
                 style={{ aspectRatio: `${aspectFromArtwork(first)}` }}
               />
             </button>
@@ -182,19 +180,19 @@ export function Chapter({
               type="button"
               onClick={open(0)}
               aria-label={`Open ${first.title || "artwork"} in the viewer`}
-              className="absolute -bottom-3 left-2 z-10 flex items-center gap-3 rounded-full bg-white py-1.5 pl-1.5 pr-4 text-left shadow-[0_10px_30px_-8px_rgba(43,33,24,0.35)] transition hover:shadow-[0_16px_40px_-8px_rgba(43,33,24,0.45)]"
+              className="absolute -bottom-3 left-2 z-10 flex max-w-[86vw] items-center gap-3 rounded-full bg-white py-1.5 pl-1.5 pr-4 text-left shadow-[0_10px_30px_-8px_rgba(43,33,24,0.35)] transition hover:shadow-[0_16px_40px_-8px_rgba(43,33,24,0.45)] dark:bg-zinc-900 dark:shadow-black/40"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imageUrl(first.image, 200) ?? ""}
                 alt=""
-                className="h-[52px] w-[36px] rounded-full object-cover"
+                className="h-[52px] w-[36px] shrink-0 rounded-full object-cover"
               />
-              <span className="leading-tight">
-                <span className="block text-[13px] font-semibold text-stone-900">
+              <span className="min-w-0 leading-tight">
+                <span className="block truncate text-[13px] font-semibold text-stone-900 dark:text-white">
                   {first.title || "Untitled"}
                 </span>
-                <span className="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">
+                <span className="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-stone-400">
                   {catLabel(first)}
                 </span>
               </span>
@@ -209,7 +207,7 @@ export function Chapter({
               text={chapterParagraph(wall)}
               accent={accent}
               active={active}
-              className="mt-4 text-[clamp(1.2rem,2vw,1.6rem)] font-medium leading-snug"
+              className="mt-4 text-[clamp(1.05rem,2vw,1.6rem)] font-medium leading-snug"
             />
             <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.2em] opacity-60">
               {first.title || "Untitled"}
@@ -221,14 +219,14 @@ export function Chapter({
       )}
 
       {/* Collage strip — the remaining artworks in one horizontal row */}
-      <div className="mx-auto w-full max-w-7xl pb-[6vh]">
-        <div className="flex items-end justify-center gap-3 sm:gap-4">
+      <div className="mx-auto w-full max-w-7xl pb-4 md:pb-[6vh]">
+        <div className="flex snap-x items-end gap-3 overflow-x-auto px-1 pb-1 [scrollbar-width:none] sm:justify-center sm:gap-4 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
           {rest.map((art, i) => {
             const src = imageUrl(art.image, 600);
             return (
               <motion.figure
                 key={art._id}
-                className="relative shrink-0"
+                className="relative shrink-0 snap-start"
                 initial={{ opacity: 0, y: 16 }}
                 animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
                 transition={{ duration: 0.5, delay: 0.25 + i * 0.07 }}
@@ -246,12 +244,12 @@ export function Chapter({
                       alt={art.title || "Artwork"}
                       loading="lazy"
                       draggable={false}
-                      className="h-[15vh] w-auto max-w-[22vw] object-contain"
+                      className="h-[16vh] w-auto max-w-[38vw] object-contain sm:max-w-[22vw]"
                       style={{ aspectRatio: `${aspectFromArtwork(art)}` }}
                     />
                   )}
                 </button>
-                <figcaption className="mt-1.5 max-w-[22vw] truncate text-[9px] font-semibold uppercase tracking-[0.2em] opacity-60">
+                <figcaption className="mt-1.5 max-w-[38vw] truncate text-[9px] font-semibold uppercase tracking-[0.2em] opacity-60 sm:max-w-[22vw]">
                   {art.title || "Untitled"}
                 </figcaption>
               </motion.figure>

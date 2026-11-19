@@ -31,6 +31,3 @@ export function SectionHeading({ eyebrow, title, accent, intro, align = "left", 
   );
 }
 
-export function CursorGlow() {
-  return <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 hidden [@media(pointer:fine)]:block" />;
-}

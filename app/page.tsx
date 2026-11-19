@@ -13,6 +13,7 @@ import { Contact } from "@/components/contact";
 import { NumbersStrip } from "@/components/numbers-strip";
 import { DispatchJourney } from "@/components/dispatch-journey";
 import { SectionIndex } from "@/components/section-index";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 export default function HomePage() {
   return (
@@ -21,17 +22,17 @@ export default function HomePage() {
       <SectionIndex />
       <main id="main">
         <Hero />
-        <About />
+        <ScrollReveal><About /></ScrollReveal>
         <NumbersStrip />
-        <Skills />
-        <Experience />
-        <Education />
-        <Projects />
+        <ScrollReveal><Skills /></ScrollReveal>
+        <ScrollReveal><Experience /></ScrollReveal>
+        <ScrollReveal><Education /></ScrollReveal>
+        <ScrollReveal><Projects /></ScrollReveal>
         <DispatchJourney />
         <Gallery />
-        <Certifications />
-        <Testimonials />
-        <Contact />
+        <ScrollReveal><Certifications /></ScrollReveal>
+        <ScrollReveal><Testimonials /></ScrollReveal>
+        <ScrollReveal><Contact /></ScrollReveal>
       </main>
       <Footer />
     </div>

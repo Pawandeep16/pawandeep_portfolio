@@ -2,20 +2,16 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
-import { CHAPTER_ACCENT, CHAPTER_PAPER, ROMAN, type ChapterWall } from "@/lib/chapter-config";
+import { useTheme } from "next-themes";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { CHAPTER_ACCENT, CHAPTER_PAPER, darkPalette, ROMAN, type ChapterWall } from "@/lib/chapter-config";
 import { anton } from "@/lib/fonts";
 import { CoverRing } from "./ring";
 
 /**
- * Stage — the 100vh opening stage of the Chapter gallery.
- *
- * Flat cream paper ground with a very subtle grain, a small in-section
- * header row, a centred tall-condensed headline (small function words at
- * half size, raised above the baseline), two laurel badges, and the
- * rotating 3D ring of six chapter covers in the lower two-thirds. The
- * stage background and header colours cross-fade to the active chapter's
- * accent as the ring turns.
+ * Stage — the 100vh opening stage: cream paper with grain, header row,
+ * tall-condensed headline, laurel badges, and the rotating 3D ring of six
+ * chapter covers below. Colours cross-fade to the active chapter's accent.
  */
 
 const GRAIN =
@@ -62,7 +58,7 @@ function Laurel({ label, accent }: { label: string; accent: string }) {
         {leaves}
         <path d="M60 108 L60 116" stroke={accent} strokeWidth="1.5" />
       </svg>
-      <span className="max-w-[86px] text-center text-[10px] font-bold uppercase leading-tight tracking-[0.18em] text-stone-700">
+      <span className="max-w-[86px] text-center text-[10px] font-bold uppercase leading-tight tracking-[0.18em] text-stone-700 dark:text-stone-300">
         {label}
       </span>
     </span>
@@ -79,9 +75,11 @@ export function Stage({
   onSelectChapter: (i: number) => void;
 }) {
   const [active, setActive] = useState(0);
-  const palette = walls[active]?.palette;
+  const { resolvedTheme } = useTheme();
+  const base = walls[active]?.palette;
+  const palette = resolvedTheme === "dark" && base ? darkPalette(base) : base;
   const accent = palette?.accent ?? CHAPTER_ACCENT;
-  const ground = palette?.ground ?? CHAPTER_PAPER;
+  const ground = palette?.ground ?? (resolvedTheme === "dark" ? "#0c0c0d" : CHAPTER_PAPER);
 
   return (
     <div
@@ -99,13 +97,13 @@ export function Stage({
       <header className="relative z-10 mx-auto flex w-full max-w-7xl items-start justify-between px-4 pt-6 sm:px-6 lg:px-8">
         <a
           href="#about"
-          className="pt-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-stone-600 underline-offset-4 transition hover:text-stone-900 hover:underline"
+          className="hidden pt-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-stone-600 underline-offset-4 transition hover:text-stone-900 hover:underline dark:text-stone-300 dark:hover:text-white sm:block"
         >
           About
         </a>
         <div className="text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-stone-900">Pawandeep Thandi</p>
-          <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.34em] text-stone-500">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-stone-900 dark:text-stone-50 sm:text-sm">Pawandeep Thandi</p>
+          <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.34em] text-stone-500 dark:text-stone-400">
             The Gallery
           </p>
         </div>
@@ -113,7 +111,7 @@ export function Stage({
           href="/resume.pdf"
           target="_blank"
           rel="noreferrer"
-          className="rounded-full border border-stone-400/80 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-700 transition hover:border-stone-900 hover:text-stone-900"
+          className="rounded-full border border-stone-400/80 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-700 transition hover:border-stone-900 hover:text-stone-900 dark:border-white/25 dark:text-stone-200 dark:hover:border-white dark:hover:text-white sm:px-4"
         >
           Resume <ArrowUpRight className="inline h-3.5 w-3.5" aria-hidden="true" />
         </a>
@@ -137,7 +135,7 @@ export function Stage({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className={`${anton.className} mt-4 uppercase leading-[0.98] text-stone-900`}
+          className={`${anton.className} mt-4 uppercase leading-[0.98] text-stone-900 dark:text-stone-50`}
           style={{ fontSize: "clamp(3rem, 8vw, 4.6rem)" }}
         >
           <span className="block">
@@ -170,18 +168,18 @@ export function Stage({
       {/* Rotating ring of chapter covers — lower two-thirds */}
       <div className="relative z-10 mt-auto">
         <CoverRing walls={walls} active={active} onActiveChange={setActive} onSelect={onSelectChapter} />
-        <p className="pb-16 text-center text-[10px] font-semibold uppercase tracking-[0.3em] text-stone-500">
+        <p className="pb-16 text-center text-[10px] font-semibold uppercase tracking-[0.3em] text-stone-500 dark:text-stone-400">
           Chapter {ROMAN[active]} — {walls[active]?.name ?? ""}
         </p>
       </div>
 
       {/* Bottom chrome */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex items-end justify-between px-4 pb-4 sm:px-6 lg:px-8">
-        <p className="text-[10px] uppercase tracking-[0.22em] text-stone-500">
-          Made by <span className="font-bold text-stone-700">Pawandeep</span>
+        <p className="text-[10px] uppercase tracking-[0.22em] text-stone-500 dark:text-stone-400">
+          Made by <span className="font-bold text-stone-700 dark:text-stone-200">Pawandeep</span>
         </p>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-stone-500">
-          Scroll <ArrowDown className="inline h-3 w-3" aria-hidden="true" /> · {total} works
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-stone-500 dark:text-stone-400">
+          Drag or use the arrows <ArrowRight className="inline h-3 w-3" aria-hidden="true" /> · {total} works
         </p>
       </div>
     </div>

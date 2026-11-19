@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
 import { Magnetic } from "@/components/magnetic";
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
-import { ArrowDown, ArrowRight, Download, Github, Linkedin, Mail, MapPin, Truck } from "lucide-react";
+import { motion, useMotionValue, useScroll, useSpring, useTransform, useReducedMotion } from "framer-motion";
+import { ArrowDown, ArrowRight, Github, Linkedin, Mail, MapPin, Truck } from "lucide-react";
 import { anton } from "@/lib/fonts";
 import { client, HERO_QUERY, SOCIAL_LINKS_QUERY } from "@/lib/sanity";
 import { fallbackHero, fallbackSocialLinks } from "@/lib/fallback-data";
@@ -36,6 +36,14 @@ export function Hero() {
   // (so the headline is in the server-rendered HTML) and let the CMS
   // update it in the background.
   const reduce = useReducedMotion();
+  // Apple-style hero: as the visitor scrolls away, the hero content gently
+  // shrinks and fades (scroll-linked, transform/opacity only). The
+  // entrance animations above are untouched — this composes on top.
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: heroScroll } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroOpacity = useTransform(heroScroll, [0, 0.8], [1, 0]);
+  const heroScale = useTransform(heroScroll, [0, 1], [1, 0.96]);
+  const heroY = useTransform(heroScroll, [0, 1], [0, -60]);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 60, damping: 20 });
@@ -59,14 +67,14 @@ export function Hero() {
   }, []);
 
   return (
-    <section id="home" className="grid-bg relative overflow-hidden pb-16 pt-28 sm:pt-36 lg:pb-24" aria-label="Introduction"
+    <section ref={heroRef} id="home" className="grid-bg relative overflow-hidden pb-16 pt-28 sm:pt-36 lg:pb-24" aria-label="Introduction"
       onMouseMove={(e) => { if (reduce) return; mx.set(e.clientX / window.innerWidth - 0.5); my.set(e.clientY / window.innerHeight - 0.5); }}>
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <motion.div style={reduce ? undefined : { x: blobX, y: blobY }} className="absolute -top-32 right-[8%] h-72 w-72 rounded-full bg-amber-600/20 blur-3xl dark:bg-amber-600/25" />
-        <div className="absolute bottom-0 left-[-5%] h-72 w-72 rounded-full bg-orange-600/10 blur-3xl" />
+        <div className="absolute bottom-0 left-[-5%] h-72 w-72 rounded-full bg-amber-600/10 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <motion.div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" style={reduce ? undefined : { opacity: heroOpacity, scale: heroScale, y: heroY }}>
         <div className="grid items-start gap-12 lg:grid-cols-[1.2fr_0.8fr]">
           <div>
             <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
@@ -119,7 +127,7 @@ export function Hero() {
                 ] as const).map((o) => (
                   <button key={o.id} type="button" onClick={() => chooseTrack(o.id)} aria-pressed={track === o.id}
                     className={track === o.id
-                      ? "rounded-full bg-stone-900 px-4 py-2 text-sm font-semibold text-white dark:bg-amber-600 dark:text-white"
+                      ? "rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white"
                       : "rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-600 transition hover:border-amber-500 hover:text-stone-900 dark:border-white/15 dark:text-stone-300 dark:hover:text-white"}>
                     {o.label}
                   </button>
@@ -134,7 +142,7 @@ export function Hero() {
 
             <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.32 }} className="mt-6 flex flex-wrap gap-3">
               <Magnetic><Link href="#projects" className="btn-primary">Explore My Work <ArrowRight className="h-4 w-4" /></Link></Magnetic>
-              <Magnetic><a href="/resume.pdf" download className="btn-ghost"><Download className="h-4 w-4" /> Download Resume</a></Magnetic>
+              <Magnetic><Link href="#contact" className="btn-ghost">Contact Me <ArrowRight className="h-4 w-4" /></Link></Magnetic>
             </motion.div>
 
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.42 }} className="mt-8 flex items-center gap-2">
@@ -154,9 +162,14 @@ export function Hero() {
           </div>
 
           <motion.aside initial={{ opacity: 0, y: 32, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="space-y-4 lg:pt-24">
-            <div className="card-surface relative overflow-hidden p-6 sm:p-7" aria-hidden="true">
-              <p className="relative font-display text-6xl tracking-tight text-stone-900 dark:text-white sm:text-7xl">PT<span className="text-amber-600">.</span></p>
-              <p className="relative mt-3 font-mono text-[11px] uppercase tracking-[0.2em] text-stone-500 dark:text-stone-400">Full Stack · UI/UX · Graphics</p>
+            <div className="card-surface relative overflow-hidden p-6 sm:p-7">
+              <div className="relative flex items-center gap-4">
+                <Image src="/assets/portrait.jpg" alt="Portrait of Pawandeep Singh Thandi" width={150} height={150} className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-amber-600/30" />
+                <div>
+                  <p className="relative font-display text-2xl leading-tight tracking-tight text-stone-900 dark:text-white sm:text-3xl">Pawandeep Singh Thandi</p>
+                  <p className="relative mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-stone-500 dark:text-stone-400">Full Stack · UI/UX · Graphics</p>
+                </div>
+              </div>
               <div className="relative mt-5 flex flex-wrap gap-2">
                 {["React", "Next.js", "TypeScript", "Google Apps Script", "Figma", "SQL"].map((t, i) => (
                   <motion.span key={t} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 + i * 0.08 }} className="chip">{t}</motion.span>
@@ -189,7 +202,7 @@ export function Hero() {
             </motion.p>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </section>
   );
 }

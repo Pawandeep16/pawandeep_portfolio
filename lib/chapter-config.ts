@@ -31,6 +31,23 @@ export const CHAPTER_PALETTES: ChapterPalette[] = [
 
 export const ROMAN = ["I", "II", "III", "IV", "V", "VI"] as const;
 
+/** Darken a hex colour toward black by factor f (0 = unchanged, 1 = black).
+ *  Used to derive each chapter's dark-mode ground from its paper ground,
+ *  so the gallery matches the theme instead of staying cream in dark mode. */
+export function darken(hex: string, f: number): string {
+  const m = hex.replace("#", "");
+  const r = Math.round(parseInt(m.slice(0, 2), 16) * (1 - f));
+  const g = Math.round(parseInt(m.slice(2, 4), 16) * (1 - f));
+  const b = Math.round(parseInt(m.slice(4, 6), 16) * (1 - f));
+  return `#${[r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
+}
+
+/** Dark-mode version of a chapter palette: the same accent, a deeply
+ *  darkened ground, and light ink. */
+export function darkPalette(p: ChapterPalette): ChapterPalette {
+  return { accent: p.accent, ground: darken(p.ground, 0.88), ink: "#f4f2ef" };
+}
+
 export interface ChapterWall {
   id: string;
   /** "chapter-1" … "chapter-6" — scroll targets. */

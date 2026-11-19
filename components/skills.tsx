@@ -30,29 +30,31 @@ export function Skills() {
     <section id="skills" className="scroll-mt-24 py-28 sm:py-40" aria-label="Technical skills">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="02 — Skills" title="What I work with." accent="work" marker="SKILLS"
-          intro="What I build with — grouped by craft, no scores, just tools I've actually used." />
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          intro="Grouped by craft — tools I've actually used." />
+        <div className="mt-10 space-y-4">
           {cats.map((cat, i) => {
             const Icon = ICONS[cat.icon] ?? Code2;
             return (
-              <Reveal key={cat._id} delay={0.05 * i} className="card-surface group p-6 transition hover:-translate-y-1">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-11 w-11 place-items-center rounded-2xl bg-amber-600/10 text-amber-600 dark:text-amber-400"><Icon className="h-5 w-5" /></span>
-                  <h3 className="text-base font-semibold text-zinc-900 dark:text-white">{cat.title.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "").trim()}</h3>
+              <Reveal key={cat._id} delay={0.04 * i}>
+                <div className="card-surface flex flex-col gap-4 p-6 transition hover:-translate-y-0.5 sm:flex-row sm:items-center sm:gap-6">
+                  <div className="flex shrink-0 items-center gap-3 sm:w-72">
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-amber-600/10 text-amber-600 dark:text-amber-400"><Icon className="h-5 w-5" /></span>
+                    <h3 className="text-base font-semibold text-zinc-900 dark:text-white">{cat.title.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "").trim()}</h3>
+                    <span className="ml-auto rounded-full bg-zinc-900/5 px-2 py-0.5 font-mono text-[11px] font-semibold text-zinc-500 dark:bg-white/10 dark:text-zinc-400 sm:ml-0">{cat.skills.length}</span>
+                  </div>
+                  <ul className="flex flex-1 flex-wrap gap-2">
+                    {cat.skills.map((sk) => (
+                      <li key={sk.name} className="chip !px-3 !py-1.5 !text-[13px]">{sk.name}</li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="mt-5 flex flex-wrap gap-2">
-                  {cat.skills.map((s) => (
-                    <li key={s.name} className="chip !px-3 !py-1.5 !text-[13px]">{s.name}</li>
-                  ))}
-                </ul>
               </Reveal>
             );
           })}
         </div>
-        <Reveal className="card-surface mt-4 p-6">
-          <p className="text-sm font-semibold text-zinc-900 dark:text-white">Also in my toolkit — from operations &amp; coursework</p>
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">From my resume and day-to-day operations work.</p>
-          <ul className="mt-4 flex flex-wrap gap-2">
+        <Reveal className="card-surface mt-4 flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:gap-6">
+          <p className="shrink-0 text-sm font-semibold text-zinc-900 dark:text-white sm:w-72">Also in my toolkit</p>
+          <ul className="flex flex-1 flex-wrap gap-2">
             {TOOLKIT.map((t) => <li key={t} className="chip">{t}</li>)}
           </ul>
         </Reveal>

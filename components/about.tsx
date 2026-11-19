@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Boxes, Code2, GraduationCap, Lightbulb, MapPin, Sparkles, Truck, Wrench } from "lucide-react";
 import { client, EDUCATION_QUERY, EXPERIENCE_QUERY } from "@/lib/sanity";
 import { fallbackEducation, fallbackExperience } from "@/lib/fallback-data";
@@ -42,12 +43,19 @@ export function About() {
 
         <div className="mt-12 grid gap-4 md:grid-cols-3">
           <Reveal className="card-surface p-6 md:col-span-2 md:row-span-2">
-            <p className="eyebrow">Professional summary</p>
+            <div className="flex items-center gap-4">
+              <Image src="/assets/portrait.jpg" alt="Portrait of Pawandeep Singh Thandi" width={150} height={150} className="h-20 w-20 shrink-0 rounded-full object-cover ring-2 ring-amber-600/30" />
+              <div>
+                <p className="eyebrow">Professional summary</p>
+                <p className="mt-1 text-base font-semibold text-zinc-900 dark:text-white">Pawandeep Singh Thandi</p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Full Stack Developer · Designer · Parcel Team Lead</p>
+              </div>
+            </div>
             <p className="mt-4 text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
               Computer Science graduate (B.Tech) with a graduate certificate in Software &amp; Database Development — Parcel Team Lead and Full Stack Developer. Software on one side, sorting, dispatch and route coordination on the other.
             </p>
             <p className="mt-4 leading-relaxed text-zinc-600 dark:text-zinc-400">
-              The clearest example: the Driver Check-in System I built for GoBolt — a real bottleneck, a tool that removes it, and a team that keeps using it.
+              The clearest example: the Driver Check-in System I built for GoBolt — a bottleneck, a tool that removes it, a team still using it.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
               <span className="chip"><GraduationCap className="h-3.5 w-3.5" /> B.Tech, Computer Science &amp; Engineering</span>
@@ -73,11 +81,16 @@ export function About() {
             </p>
           </Reveal>
 
+        </div>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {STRENGTHS.map((s, i) => (
-            <Reveal key={s.title} delay={0.05 * i} className="card-surface group p-6 transition hover:-translate-y-1">
-              <s.icon className="h-6 w-6 text-amber-600 transition group-hover:scale-110 dark:text-amber-400" />
-              <p className="mt-4 text-base font-semibold text-zinc-900 dark:text-white">{s.title}</p>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{s.text}</p>
+            <Reveal key={s.title} delay={0.05 * i} className="card-surface group flex items-start gap-4 p-6 transition hover:-translate-y-1">
+              <s.icon className="mt-1 h-6 w-6 shrink-0 text-amber-600 transition group-hover:scale-110 dark:text-amber-400" />
+              <div>
+                <p className="text-base font-semibold text-zinc-900 dark:text-white">{s.title}</p>
+                <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{s.text}</p>
+              </div>
             </Reveal>
           ))}
         </div>
@@ -87,8 +100,8 @@ export function About() {
           <div className="card-surface grid gap-6 p-6 sm:p-8 lg:grid-cols-[1fr_1.2fr]">
             <div>
               <p className="eyebrow">Logistics × Web</p>
-              <h3 className="mt-3 font-display text-3xl leading-tight text-stone-900 dark:text-stone-50 sm:text-4xl">Where the two sides <em className="serif-accent text-amber-700 dark:text-amber-500">meet.</em></h3>
-              <p className="mt-3 text-sm leading-relaxed text-stone-600 dark:text-stone-400">The floor finds the bottleneck. The code removes it. Three times that actually happened:</p>
+              <h3 className="mt-3 font-display text-4xl leading-tight text-stone-900 dark:text-stone-50 sm:text-5xl">Where the two sides <em className="serif-accent text-amber-700 dark:text-amber-500">meet.</em></h3>
+              <p className="mt-3 text-sm leading-relaxed text-stone-600 dark:text-stone-400">The floor finds the bottleneck. The code removes it. Three times it happened:</p>
               <ul className="mt-5 space-y-3 text-sm leading-relaxed text-stone-700 dark:text-stone-300">
                 <li><strong className="text-stone-900 dark:text-white">Driver Check-in System — GoBolt.</strong> Dock chaos → a check-in, queue and serving board the whole warehouse runs on.</li>
                 <li><strong className="text-stone-900 dark:text-white">Internal tools — GoBolt.</strong> Daily productivity and exception reports, audit-ready records, and the tools the team tracks work with.</li>
@@ -96,7 +109,7 @@ export function About() {
               </ul>
             </div>
             <div className="overflow-hidden rounded-xl">
-              <img src="/assets/route-map.svg" alt="Stylised route map from warehouse to destination" className="h-full w-full object-cover" />
+              <Image src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1200&q=80" alt="Warehouse racks stacked with parcels" width={1200} height={800} className="h-full w-full object-cover" />
             </div>
           </div>
         </Reveal>

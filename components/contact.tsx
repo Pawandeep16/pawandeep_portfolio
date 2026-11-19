@@ -7,16 +7,26 @@ import { fallbackHero, fallbackSocialLinks } from "@/lib/fallback-data";
 import { ContactForm } from "@/components/contact-form";
 import { Reveal, SectionHeading } from "@/components/ui";
 
+/**
+ * Contact — v25. The big dark tile is gone: it looked wrong in both
+ * themes (a heavy black slab in light mode, a washed-out ghost box in
+ * dark mode). Now the section is open like the rest of the site — a soft
+ * amber wash at the top, contact rows on the left, the form on the right,
+ * no enclosing box. The "Hire me" card lost its loud gradient for a
+ * plain card with an availability pill.
+ */
 export function Contact() {
   const hero = fallbackHero;
   const socials = fallbackSocialLinks;
   const iconFor = (name: string) => (name === "LinkedIn" ? Linkedin : name === "GitHub" ? Github : Mail);
   return (
-    <section id="contact" className="scroll-mt-24 py-28 sm:py-40" aria-label="Contact">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="relative scroll-mt-24 overflow-hidden py-28 sm:py-40" aria-label="Contact">
+      {/* Soft amber wash at the top — warmth without a box. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(217,119,6,0.12),transparent)]" />
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Chapter VII — Contact" title="Let's build something useful." accent="useful." marker="CONTACT"
-          intro="Have a role, a project, or a process that needs fixing? I'd love to hear about it — fill in the form or reach me directly." />
-        <div className="mx-auto mt-12 grid max-w-5xl gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+          intro="Have a role or a project? Fill in the form or reach me directly." />
+        <div className="mt-12 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
           <Reveal className="space-y-4">
             {[
               { label: "Email", value: hero.email, href: `mailto:${hero.email}`, Icon: Mail },
@@ -38,11 +48,16 @@ export function Contact() {
               })}
               <motion.a href={`mailto:${hero.email}`} aria-label="Email" whileHover={{ scale: 1.12, rotate: 4, y: -2 }} whileTap={{ scale: 0.9 }} transition={{ type: "spring", stiffness: 400, damping: 18 }} className="grid h-11 w-11 place-items-center rounded-full border border-zinc-200 text-zinc-600 transition hover:-translate-y-0.5 hover:border-amber-500 hover:text-amber-600 dark:border-white/10 dark:text-zinc-300 dark:hover:border-amber-400 dark:hover:text-amber-400"><Mail className="h-5 w-5" /></motion.a>
             </div>
-            <div className="card-surface bg-gradient-to-br from-amber-600 to-orange-600 !border-0 p-6 text-white">
-              <Image src="/assets/web-closed-box.svg" alt="Closed parcel box" width={375} height={375} className="mb-4 h-16 w-16 rounded-lg bg-white/90 p-1.5" />
-              <p className="text-lg font-semibold">Hire me</p>
-              <p className="mt-1 text-sm leading-relaxed text-amber-100">Available immediately for full-stack, frontend and operations-technology roles in the Greater Toronto Area.</p>
-              <a href="/resume.pdf" download className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-amber-700 transition hover:bg-amber-50">Download resume</a>
+            <div className="card-surface flex items-start gap-4 p-6">
+              <Image src="/assets/web-closed-box.svg" alt="Closed parcel box" width={375} height={375} className="h-14 w-14 shrink-0 rounded-xl bg-amber-600/10 p-2" />
+              <div>
+                <p className="flex flex-wrap items-center gap-2 text-lg font-semibold text-zinc-900 dark:text-white">
+                  Hire me
+                  <span className="rounded-full bg-emerald-600/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-400">Available immediately</span>
+                </p>
+                <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">Full-stack, frontend and operations-technology roles in the Greater Toronto Area.</p>
+                <a href="/resume.pdf" download className="btn-primary mt-4 !px-5 !py-2.5 !text-sm">Download resume</a>
+              </div>
             </div>
           </Reveal>
           <Reveal delay={0.08} className="card-surface p-6 sm:p-8">

@@ -2,6 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Providers } from "./providers";
+import { PageTransition } from "@/components/page-transition";
+import { BackToTop } from "@/components/back-to-top";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const display = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"], variable: "--font-display", display: "swap" });
@@ -11,6 +13,8 @@ const description =
   "Computer Science graduate with a passion for software development, intelligent systems, automation, and solving practical business problems through technology.";
 
 export const metadata: Metadata = {
+  // Next 13: viewport lives on metadata (the Viewport export is Next 14+).
+  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
   metadataBase: new URL(site),
   title: {
     default: "Pawandeep Singh Thandi — Full Stack Developer & Designer",
@@ -28,8 +32,9 @@ export const metadata: Metadata = {
     title: "Pawandeep Singh Thandi — Full Stack Developer & Designer",
     description,
     locale: "en_CA",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Pawandeep Singh Thandi — Full Stack Developer & Designer" }],
   },
-  twitter: { card: "summary_large_image", title: "Pawandeep Singh Thandi — Full Stack Developer & Designer", description },
+  twitter: { card: "summary_large_image", title: "Pawandeep Singh Thandi — Full Stack Developer & Designer", description, images: ["/og-image.png"] },
   robots: { index: true, follow: true },
 };
 
@@ -41,7 +46,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-amber-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white">
           Skip to content
         </a>
-        <Providers>{children}</Providers>
+        <Providers>
+          <PageTransition>{children}</PageTransition>
+          <BackToTop />
+        </Providers>
       </body>
     </html>
   );

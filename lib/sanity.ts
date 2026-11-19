@@ -136,7 +136,7 @@ export const SOCIAL_LINKS_QUERY = `*[_type == "socialLink"] | order(order asc){
 export function imageUrl(source: any, width = 1200): string | null {
   if (!source) return null;
   try {
-    return urlFor(source).width(width).url();
+    return urlFor(source).width(width).auto("format").url();
   } catch {
     return null;
   }

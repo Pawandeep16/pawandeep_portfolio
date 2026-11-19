@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Download, Github, Linkedin, Mail } from "lucide-react";
 import { fallbackHero, fallbackSocialLinks } from "@/lib/fallback-data";
@@ -25,7 +26,7 @@ export function Footer() {
         <div className="hairline mt-16 grid gap-10 pt-10 md:grid-cols-[1fr_auto_auto]">
           <div>
             <p className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-md bg-amber-600 font-mono text-sm font-bold text-white" aria-hidden="true">PT</span>
+              <Image src="/assets/portrait.jpg" alt="" width={80} height={80} className="h-10 w-10 rounded-full object-cover ring-1 ring-black/10 dark:ring-white/20" aria-hidden="true" />
               <span className="font-display text-lg text-stone-900 dark:text-white">Pawandeep Singh Thandi</span>
             </p>
             <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.2em] text-stone-500 dark:text-stone-400">Developer · Designer · Ops</p>

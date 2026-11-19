@@ -1,29 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTheme } from "next-themes";
 import { imageUrl } from "@/lib/sanity";
 import { aspectFromArtwork } from "@/lib/gallery-config";
-import { ROMAN, type ChapterWall } from "@/lib/chapter-config";
+import { darkPalette, ROMAN, type ChapterWall } from "@/lib/chapter-config";
 import { anton } from "@/lib/fonts";
 
 /**
- * CoverRing — the rotating 3D ring of six chapter covers.
- *
- * CSS 3D cylinder (preserve-3d, one cover every 60°): two covers in front
- * (bottom left/right, tilted in perspective), two at the back (top, showing
- * their pale backs). Drag left/right to spin, mouse-wheel / scroll over the
- * ring rotates it in steps, and it auto-advances slowly. Clicking a cover
- * spins it to the front, then calls onSelect.
- *
- * Each cover is a real magazine-cover card: coloured ground per chapter,
- * "PAWANDEEP THANDI" at top centre, the chapter title in Anton, one
- * full-bleed artwork image below the title (the wall's first artwork, real
- * image via imageUrl, kept at its original aspect), and a one-line
- * description at the foot in tiny condensed caps.
+ * CoverRing — rotating CSS 3D ring of the six chapter covers (one every
+ * 60°). Drag to spin, wheel over the ring steps it, it auto-advances, and
+ * clicking a cover spins it to the front, then selects it. Cover sizes
+ * shrink on small screens so the front cover still fits.
  */
 
 const STEP = 60; // degrees between covers
-const RADIUS = 340; // cylinder radius (px)
 
 export function CoverRing({
   walls,
@@ -38,8 +29,19 @@ export function CoverRing({
   onSelect: (i: number) => void;
   compact?: boolean;
 }) {
+  const { resolvedTheme } = useTheme();
+  const dark = resolvedTheme === "dark";
+  const groundOf = (wall: ChapterWall) => (dark ? darkPalette(wall.palette).ground : wall.palette.ground);
   const [rotation, setRotation] = useState(0);
   const [snapping, setSnapping] = useState(true);
+  const [winW, setWinW] = useState(() => (typeof window === "undefined" ? 1200 : window.innerWidth));
+  // Small screens get a smaller cylinder so the front cover still fits
+  // with its neighbours peeking at the edges instead of crowding it.
+  const small = winW < 480;
+  const medium = winW < 768;
+  const coverW = compact ? (small ? 140 : medium ? 160 : 170) : small ? 150 : medium ? 180 : 210;
+  const coverH = compact ? (small ? 210 : medium ? 240 : 255) : small ? 225 : medium ? 270 : 315;
+  const radius = small ? 210 : medium ? 280 : 340;
   const rotationRef = useRef(0);
   const dragRef = useRef<{ x: number; rot: number } | null>(null);
   const wheelLockRef = useRef(0);
@@ -77,6 +79,12 @@ export function CoverRing({
     },
     []
   );
+
+  useEffect(() => {
+    const onResize = () => setWinW(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   const spinTo = useCallback(
     (i: number) => {
@@ -132,13 +140,10 @@ export function CoverRing({
     applyRotation(Math.round(rotationRef.current / STEP) * STEP, true);
   };
 
-  const coverW = compact ? 170 : 210;
-  const coverH = compact ? 255 : 315;
-
   return (
     <div
       className="relative mx-auto w-full select-none"
-      style={{ height: coverH + 90, perspective: 1400, touchAction: "pan-y" }}
+      style={{ height: coverH + (small ? 64 : 90), perspective: small ? 1000 : 1400, touchAction: "pan-y" }}
       onWheel={onWheel}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -178,15 +183,15 @@ export function CoverRing({
                 height: coverH,
                 left: -coverW / 2,
                 top: -coverH / 2,
-                transform: `rotateY(${i * STEP}deg) translateZ(${RADIUS}px)`,
+                transform: `rotateY(${i * STEP}deg) translateZ(${radius}px)`,
                 transformStyle: "preserve-3d",
-                backgroundColor: wall.palette.ground,
+                backgroundColor: groundOf(wall),
               }}
             >
               {/* Front face */}
               <span
                 className="absolute inset-0 flex flex-col"
-                style={{ backfaceVisibility: "hidden", backgroundColor: wall.palette.ground }}
+                style={{ backfaceVisibility: "hidden", backgroundColor: groundOf(wall) }}
               >
                 <span
                   className="pt-3 text-center text-[9px] font-bold uppercase tracking-[0.32em]"
@@ -196,11 +201,11 @@ export function CoverRing({
                 </span>
                 <span
                   className={`${anton.className} mt-1 px-2 text-center uppercase leading-[0.95]`}
-                  style={{ color: wall.palette.accent, fontSize: 30 }}
+                  style={{ color: wall.palette.accent, fontSize: small ? 24 : 30 }}
                 >
                   {wall.keyWord}
                 </span>
-                <span className="mt-1 px-3 text-center text-[8px] font-semibold uppercase tracking-[0.24em] text-stone-500">
+                <span className="mt-1 px-3 text-center text-[8px] font-semibold uppercase tracking-[0.24em] text-stone-500 dark:text-stone-400">
                   Chapter {ROMAN[i]} · {wall.items.length} works
                 </span>
                 <span className="relative mt-2 flex-1 overflow-hidden">
@@ -215,7 +220,7 @@ export function CoverRing({
                     />
                   )}
                 </span>
-                <span className="px-3 py-2 text-center text-[9px] font-semibold uppercase tracking-[0.18em] text-stone-600">
+                <span className="px-3 py-2 text-center text-[9px] font-semibold uppercase tracking-[0.18em] text-stone-600 dark:text-stone-300">
                   {wall.subtitle}
                 </span>
               </span>
@@ -225,16 +230,16 @@ export function CoverRing({
                 style={{
                   backfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
-                  backgroundColor: "#efe9df",
+                  backgroundColor: dark ? "#1a1712" : "#efe9df",
                 }}
               >
-                <span className="text-[9px] font-bold uppercase tracking-[0.32em] text-stone-500">
+                <span className="text-[9px] font-bold uppercase tracking-[0.32em] text-stone-500 dark:text-stone-400">
                   Pawandeep Thandi
                 </span>
                 <span className={`${anton.className} text-3xl uppercase`} style={{ color: wall.palette.accent }}>
                   {ROMAN[i]}
                 </span>
-                <span className="text-[9px] font-semibold uppercase tracking-[0.24em] text-stone-500">
+                <span className="text-[9px] font-semibold uppercase tracking-[0.24em] text-stone-500 dark:text-stone-400">
                   {wall.name}
                 </span>
               </span>

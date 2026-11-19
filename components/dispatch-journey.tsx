@@ -3,30 +3,61 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import {
-  AnimatePresence,
   motion,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
-  useTransform,
 } from "framer-motion";
-import { CheckCircle2, ClipboardCheck, MapPin, MonitorPlay, Truck, UserCheck } from "lucide-react";
+import { CheckCircle2, ClipboardCheck, MonitorPlay, Truck, UserCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { TruckVector } from "@/components/truck-vector";
 
 /**
- * The Driver Check-in journey as a scroll-driven 3D scene — now with real
- * vector art: a detailed delivery truck (inline SVG, wheels spin with
- * scroll) carrying an isometric parcel, travelling a perspective road from
- * the warehouse to the destination pin. The % and status pill are tied to
- * scroll progress only — an illustration of the flow, never live data.
+ * The Driver Check-in journey as a scroll story with real photos — v23.
+ * The old 3D road/truck scene is gone. Now: a sticky two-column scene
+ * (steps on the left, a large photo on the right) that crossfades between
+ * four real warehouse/delivery photos as the visitor scrolls, one per
+ * stage. The % and status are tied to scroll progress only — an
+ * illustration of the flow, never live data. Photos: Unsplash.
  */
+
 const STAGES = [
-  { icon: UserCheck, title: "Check-in", line: "Driver authenticates, route validated, inside 300 m geofence.", status: "CHECKED IN" },
-  { icon: ClipboardCheck, title: "Loading", line: "Within capacity → Loading. Otherwise Queued, then promoted.", status: "LOADING" },
-  { icon: MonitorPlay, title: "Serving", line: "Live board: Expected vs Checked-in, in real time.", status: "SERVING" },
-  { icon: CheckCircle2, title: "Complete", line: "Route done, next driver promoted, records updated.", status: "COMPLETE" },
+  {
+    icon: UserCheck,
+    title: "Check-in",
+    line: "Driver authenticates, route validated, inside 300 m geofence.",
+    status: "CHECKED IN",
+    photo:
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1600&q=80",
+    alt: "Warehouse floor with parcels and yellow picking bins",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Loading",
+    line: "Within capacity → Loading. Otherwise Queued, then promoted.",
+    status: "LOADING",
+    photo:
+      "https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=1600&q=80",
+    alt: "Parcels stacked inside a delivery van, ready to load",
+  },
+  {
+    icon: MonitorPlay,
+    title: "Serving",
+    line: "Live board: Expected vs Checked-in, in real time.",
+    status: "SERVING",
+    photo:
+      "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1600&q=80",
+    alt: "Delivery truck driving on the highway",
+  },
+  {
+    icon: CheckCircle2,
+    title: "Complete",
+    line: "Route done, next driver promoted, records updated.",
+    status: "COMPLETE",
+    photo:
+      "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&w=1600&q=80",
+    alt: "Courier handing a parcel to a customer",
+  },
 ];
 
 const STAGE_ICONS = [UserCheck, ClipboardCheck, MonitorPlay, CheckCircle2];
@@ -38,7 +69,11 @@ export function DispatchJourney({
   compact?: boolean;
   stages?: { title: string; line: string; status: string }[];
 }) {
-  const display = stages.map((s, i) => ({ ...s, icon: STAGE_ICONS[i] ?? Truck }));
+  const display = stages.map((s, i) => ({
+    ...STAGES[i],
+    ...s,
+    icon: STAGE_ICONS[i] ?? Truck,
+  }));
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const [stage, setStage] = useState(0);
@@ -46,24 +81,22 @@ export function DispatchJourney({
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 70, damping: 26, mass: 0.5 });
 
-  const rotateX = useTransform(smooth, [0, 0.3, 1], [55, 32, 8]);
-  const sceneScale = useTransform(smooth, [0, 1], [0.82, 1]);
-  const sceneY = useTransform(smooth, [0, 1], [140, 0]);
-  const sceneOpacity = useTransform(smooth, [0, 0.08], [0.35, 1]);
-  const truckLeft = useTransform(smooth, [0, 1], ["4%", "82%"]);
-  const truckScale = useTransform(smooth, [0, 1], [0.8, 1.18]);
-  const truckShadow = useTransform(smooth, [0, 1], [0.25, 0.5]);
-  const skylineY = useTransform(smooth, [0, 1], [30, -60]);
-  const dashY = useTransform(smooth, [0, 1], [0, 320]);
-  // Wheels spin ~3 full turns across the whole journey.
-  const wheelRotation = useTransform(smooth, [0, 1], [0, 1080]);
-  // Speed lines + dust trail grow with progress.
-  const speedOpacity = useTransform(smooth, [0, 0.15, 0.9, 1], [0, 0.8, 0.8, 0]);
-
   useMotionValueEvent(smooth, "change", (v) => {
     setStage(Math.min(display.length - 1, Math.floor(v * display.length)));
     setPct(Math.round(v * 100));
   });
+
+  /** Jump to a stage by scrolling the page to its part of the scene. */
+  const jumpToStage = (i: number) => {
+    const el = ref.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    const total = el.offsetHeight - window.innerHeight;
+    window.scrollTo({
+      top: top + ((i + 0.5) / display.length) * total,
+      behavior: reduce ? "auto" : "smooth",
+    });
+  };
 
   if (reduce) {
     return (
@@ -73,7 +106,9 @@ export function DispatchJourney({
           <h2 className="mt-3 text-center font-display text-4xl text-stone-900 dark:text-stone-50 sm:text-5xl">
             One driver, one route — <em className="serif-accent text-amber-700 dark:text-amber-500">start to finish.</em>
           </h2>
-          <Image src="/assets/truck-side.svg" alt="Delivery truck, side view" width={640} height={260} className="mx-auto mt-8 h-auto w-full max-w-md" />
+          <div className="relative mt-8 overflow-hidden rounded-2xl">
+            <Image src={display[0].photo} alt={display[0].alt} width={1600} height={1200} className="h-auto w-full" />
+          </div>
           <ol className="mt-10 space-y-4">
             {display.map((s, i) => (
               <li key={s.title} className="card-surface flex items-start gap-4 p-5">
@@ -85,13 +120,14 @@ export function DispatchJourney({
               </li>
             ))}
           </ol>
+          <p className="mt-6 text-center font-mono text-[10px] uppercase tracking-[0.18em] text-stone-400">Photos: Unsplash</p>
         </div>
       </section>
     );
   }
 
   const active = display[stage];
-  const height = compact ? "h-[250vh]" : "h-[400vh]";
+  const height = compact ? "h-[220vh]" : "h-[300vh]";
 
   return (
     <section id="dispatch-journey" ref={ref} aria-label="Driver check-in journey" className={cn("relative", height)}>
@@ -110,101 +146,84 @@ export function DispatchJourney({
             </div>
           </div>
 
-          <div className="relative mt-10 [perspective:1400px]" aria-hidden="true">
-            <motion.div style={{ y: skylineY }} className="pointer-events-none absolute inset-x-0 -top-6 flex items-end justify-between opacity-25 dark:opacity-20">
-              {[56, 84, 48, 96, 64, 78, 52, 88].map((h, i) => (
-                <span key={i} className="w-10 rounded-t-sm bg-stone-400 dark:bg-stone-500 sm:w-16" style={{ height: h }} />
-              ))}
-            </motion.div>
+          <div className="mt-10 grid gap-6 lg:grid-cols-2 lg:gap-10">
+            {/* Steps — horizontal rows; the active one highlights. Click to jump. */}
+            <ol className="flex flex-col justify-center gap-3">
+              {display.map((s, i) => {
+                const isActive = i === stage;
+                const isPast = i < stage;
+                return (
+                  <li key={s.title}>
+                    <button
+                      type="button"
+                      onClick={() => jumpToStage(i)}
+                      aria-current={isActive ? "step" : undefined}
+                      className={cn(
+                        "flex w-full items-start gap-4 rounded-2xl border p-5 text-left transition-all duration-500",
+                        isActive
+                          ? "border-amber-600/60 bg-white shadow-xl shadow-amber-600/10 dark:border-amber-500/50 dark:bg-white/[0.06]"
+                          : "border-stone-200 bg-white/60 hover:border-stone-300 dark:border-white/10 dark:bg-white/[0.02] dark:hover:border-white/20",
+                      )}
+                      style={{ opacity: isActive ? 1 : isPast ? 0.7 : 0.45 }}
+                    >
+                      <span className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-md transition-colors", isActive ? "bg-amber-600 text-white" : "bg-amber-600/10 text-amber-600 dark:text-amber-400")}>
+                        <s.icon className="h-5 w-5" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="flex flex-wrap items-center gap-2 text-base font-semibold text-stone-900 dark:text-white">
+                          <span className="font-mono text-xs font-bold text-amber-600 dark:text-amber-400">0{i + 1}</span>
+                          {s.title}
+                          <span className={cn("rounded-md px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide", isActive ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-stone-100 text-stone-500 dark:bg-white/5 dark:text-stone-500")}>{s.status}</span>
+                        </span>
+                        <span className="mt-1 block text-sm leading-relaxed text-stone-600 dark:text-stone-400">{s.line}</span>
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
 
-            <motion.div
-              style={{ rotateX, scale: sceneScale, y: sceneY, opacity: sceneOpacity, transformPerspective: 1400 }}
-              className="relative h-[300px] overflow-hidden rounded-2xl border border-stone-200/80 bg-gradient-to-b from-stone-100 via-stone-200/60 to-stone-300/70 shadow-2xl shadow-stone-900/20 [transform-style:preserve-3d] dark:border-white/10 dark:from-[#171410] dark:via-[#1d1811] dark:to-[#241b10] sm:h-[340px]"
-            >
-              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-amber-500/25 to-transparent" />
-              {/* Warehouse at the start of the route */}
-              <div className="absolute left-3 top-3 w-28 sm:w-36">
-                <Image src="/assets/warehouse.svg" alt="" width={640} height={360} className="h-auto w-full rounded-lg" />
-              </div>
-              {/* Destination pin at the far end */}
-              <div className="absolute right-4 top-4 flex flex-col items-center">
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-amber-600 text-white shadow-lg"><MapPin className="h-5 w-5" /></span>
-                <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-500 dark:text-stone-400">Destination</span>
-              </div>
-              {/* The road — a trapezoid in perspective */}
-              <div className="absolute bottom-0 left-1/2 h-[78%] w-[130%] -translate-x-1/2 bg-stone-800 dark:bg-stone-950" style={{ clipPath: "polygon(38% 0, 62% 0, 100% 100%, 0 100%)" }} />
-              <motion.div style={{ backgroundPositionY: dashY }} className="absolute bottom-0 left-1/2 h-[78%] w-1 -translate-x-1/2">
-                <div className="h-full w-full bg-[repeating-linear-gradient(to_bottom,transparent_0_14px,#f5f1ea_14px_30px)]" />
-              </motion.div>
-              {/* Route stops */}
-              <div className="absolute inset-x-0 bottom-6 flex justify-between px-6 sm:px-14">
+            {/* Photo — crossfades between the four real photos as the stage changes. */}
+            <div className="relative">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl shadow-stone-900/20">
                 {display.map((s, i) => (
-                  <span key={s.title} className="flex flex-col items-center gap-2">
-                    <span className={cn("grid h-8 w-8 place-items-center rounded-full border-2 font-mono text-[11px] font-bold transition-all duration-500", i <= stage ? "border-amber-500 bg-amber-600 text-white" : "border-white/40 bg-stone-700 text-white/60")}>{i + 1}</span>
-                    <span className={cn("font-mono text-[10px] uppercase tracking-[0.18em]", i <= stage ? "text-white" : "text-white/50")}>{s.title}</span>
-                  </span>
-                ))}
-              </div>
-              {/* Speed lines + dust behind the truck */}
-              <motion.div style={{ left: truckLeft, opacity: speedOpacity }} className="absolute bottom-[24%] -translate-x-[130%]">
-                <div className="flex flex-col gap-2">
-                  <span className="block h-1 w-16 rounded-full bg-white/60" />
-                  <span className="block h-1 w-10 rounded-full bg-white/40" />
-                  <span className="block h-1 w-14 rounded-full bg-white/50" />
-                </div>
-              </motion.div>
-              {/* The truck — vector art, wheels spin with scroll; parcel bounces at each stop */}
-              <motion.div style={{ left: truckLeft, scale: truckScale }} className="absolute bottom-[26%] w-56 -translate-x-1/2 sm:w-72">
-                <motion.div style={{ opacity: truckShadow }} className="mx-auto h-3 w-3/4 rounded-[50%] bg-black/50 blur-md" aria-hidden="true" />
-                <div className="relative -mt-4">
-                  <TruckVector wheelRotation={wheelRotation} className="h-auto w-full drop-shadow-2xl" />
                   <motion.div
-                    animate={{ y: [0, -10, 0], rotate: [0, -3, 0] }}
-                    transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute -top-9 right-2 w-12 sm:w-14"
+                    key={s.title}
+                    className="absolute inset-0"
+                    initial={false}
+                    animate={{ opacity: i === stage ? 1 : 0, scale: i === stage ? 1 : 1.06 }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                    aria-hidden={i !== stage}
                   >
-                    <Image src="/assets/parcel-box.svg" alt="Parcel riding on the truck" width={320} height={260} className="h-auto w-full" />
+                    <Image
+                      src={s.photo}
+                      alt={i === stage ? s.alt : ""}
+                      width={1600}
+                      height={1200}
+                      className="h-full w-full object-cover"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                    />
                   </motion.div>
+                ))}
+                {/* Caption chip over the photo */}
+                <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full bg-black/60 px-3.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur">
+                  <span className="h-2 w-2 rounded-full bg-amber-400" aria-hidden="true" />
+                  Step {stage + 1} of {display.length} · {active.title}
                 </div>
-              </motion.div>
-            </motion.div>
-          </div>
-
-          <div className="mt-8 grid gap-3 sm:grid-cols-4">
-            {display.map((s, i) => {
-              const isActive = i === stage;
-              const isPast = i < stage;
-              return (
-                <motion.article
-                  key={s.title}
-                  aria-current={isActive ? "step" : undefined}
-                  animate={{ scale: isActive ? 1.05 : isPast ? 0.97 : 0.94, opacity: isActive ? 1 : isPast ? 0.75 : 0.45, y: isActive ? -6 : 0 }}
-                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  className={cn("rounded-2xl border p-5", isActive ? "border-amber-600/60 bg-white shadow-xl shadow-amber-600/10 dark:border-amber-500/50 dark:bg-white/[0.06]" : "border-stone-200 bg-white/60 dark:border-white/10 dark:bg-white/[0.02]")}
-                >
-                  <span className={cn("grid h-11 w-11 place-items-center rounded-md", isActive ? "bg-amber-600 text-white" : "bg-amber-600/10 text-amber-600 dark:text-amber-400")}><s.icon className="h-5 w-5" /></span>
-                  <p className="mt-4 text-base font-semibold text-stone-900 dark:text-white"><span className="mr-2 font-mono text-xs font-bold text-amber-600 dark:text-amber-400">0{i + 1}</span>{s.title}</p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-stone-600 dark:text-stone-400">{s.line}</p>
-                  <p className={cn("mt-3 inline-flex rounded-md px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-wide", isActive ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" : "bg-stone-100 text-stone-500 dark:bg-white/5 dark:text-stone-500")}>{s.status}</p>
-                </motion.article>
-              );
-            })}
-          </div>
-
-          <div className="mt-6 flex min-h-[3.5rem] flex-wrap items-center gap-3" aria-live="polite">
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={active.title}
-                initial={{ opacity: 0, y: 14, filter: "blur(4px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -14, filter: "blur(4px)" }}
-                transition={{ duration: 0.35 }}
-                className="font-display text-3xl text-stone-900 dark:text-stone-50 sm:text-4xl"
-              >
-                {active.title} <em className="serif-accent text-amber-700 dark:text-amber-500">— {active.status.toLowerCase()}</em>
-              </motion.span>
-            </AnimatePresence>
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-stone-500 dark:text-stone-400">Step {stage + 1} of {display.length} · {active.line}</span>
+                <div className="absolute bottom-4 right-4 rounded-full bg-black/60 px-3 py-1.5 font-mono text-[11px] font-bold tabular-nums text-white backdrop-blur">
+                  {pct}%
+                </div>
+              </div>
+              {/* Progress bar under the photo */}
+              <div className="mt-4 h-1 overflow-hidden rounded-full bg-stone-200 dark:bg-white/10" aria-hidden="true">
+                <motion.div
+                  className="h-full bg-amber-600"
+                  animate={{ width: `${((stage + 1) / display.length) * 100}%` }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                />
+              </div>
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-stone-400 dark:text-stone-500">Photos: Unsplash</p>
+            </div>
           </div>
         </div>
       </div>
